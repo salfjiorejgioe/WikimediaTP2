@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Mvc;
 using static Controllers.AccessControl;
 
+
 [UserAccess(Access.View)]
 public class MediasController : Controller
 {
@@ -110,6 +111,24 @@ public class MediasController : Controller
         }
     }
 
+    public ActionResult GetMediaDetails(bool forceRefresh = false)
+    {
+        int id = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
+
+        if (id != 0)
+        {
+            if (DB.Medias.HasChanged || forceRefresh)
+            {
+                Media media = DB.Medias.Get(id);
+                if (media != null)
+                {
+                    return PartialView(media);
+                }
+            }
+        }
+
+        return null;
+    }
     public ActionResult List()
     {
         ResetCurrentMediaInfo();
