@@ -279,7 +279,6 @@
     <Content Include="WebApp1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <ItemGroup>
@@ -289,6 +288,8 @@
     <Content Include="obj\Debug\Wikimedia.csproj.CoreCompileInputs.cache" />
     <Content Include="obj\Debug\Wikimedia.csproj.Up2Date" />
     <Content Include="bin\WebApplication.dll.config" />
+    <Content Include="App_Data\Users.json" />
+    <Content Include="App_Data\Medias.json" />
     <None Include="packages.config" />
     <Content Include="Views\Shared\_header.cshtml" />
     <Content Include="Views\Medias\About.cshtml" />
