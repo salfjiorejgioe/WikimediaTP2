@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using EmailHandling;
+using Models;
 using PhotosManager.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace DAL
             = new EventsRepository();
 
         static public Repository<UnverifiedEmail> UnverifiedEmails { get; set; }
-            = new Repository<UnverifiedEmail>();
+         = new Repository<UnverifiedEmail>();
 
         static public Repository<RenewPasswordCommand> RenewPasswordCommands { get; set; }
             = new Repository<RenewPasswordCommand>();
