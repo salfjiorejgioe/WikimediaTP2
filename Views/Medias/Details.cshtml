@@ -31,12 +31,3 @@
     </dl>
 
 </div>
-<script>function refreshDetails() {
-    $.get("/Medias/GetMediaDetails", function (data) {
-        if (data) {
-            $("#mediaDetailsContainer").html(data);
-        }
-    });
-}
-
-setInterval(refreshDetails, 5000);</script>
