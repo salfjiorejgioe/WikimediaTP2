@@ -19,5 +19,12 @@ namespace Wikimedia
                 defaults: new { controller = "Medias", action = "List", id = UrlParameter.Optional }
             );
         }
+
+        public static string DefaultAction()
+        {
+            return "Medias/List";
+        }
+
+        
     }
 }
