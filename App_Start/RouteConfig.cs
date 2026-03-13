@@ -22,9 +22,7 @@ namespace Wikimedia
 
         public static string DefaultAction()
         {
-            return "Medias/List";
+            return "/Medias/List";
         }
-
-        
     }
 }
