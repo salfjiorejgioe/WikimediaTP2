@@ -142,6 +142,9 @@
     <Compile Include="WebServices\GeoLocation.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Assets\users\5aa8957d-e980-4cac-b915-aaa63d0909f1.jpeg" />
+    <Content Include="App_Assets\users\kirky.png" />
+    <Content Include="App_Assets\users\no_avatar.png" />
     <Content Include="bin\Antlr3.Runtime.dll" />
     <Content Include="bin\Antlr3.Runtime.pdb" />
     <Content Include="bin\fr\System.Web.Helpers.resources.dll" />
