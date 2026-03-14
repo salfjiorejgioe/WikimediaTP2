@@ -52,7 +52,7 @@
     "Verified": true,
     "Notify": true,
     "Avatar": "/App_Assets/Users/no_avatar.png",
-    "Id": 4
+    "Id": 5
   },
   {
     "Name": "user3",
@@ -63,7 +63,11 @@
     "Verified": true,
     "Notify": true,
     "Avatar": "/App_Assets/Users/no_avatar.png",
+<<<<<<< HEAD
     "Id": 4
+=======
+    "Id": 6
+>>>>>>> 4a604193e217f20dee4bda65911fce29198d4f59
   },
   {
     "Name": "patrick",
@@ -74,6 +78,10 @@
     "Verified": true,
     "Notify": true,
     "Avatar": "/App_Assets/Users/patrick.png",
+<<<<<<< HEAD
     "Id": 5
+=======
+    "Id": 7
+>>>>>>> 4a604193e217f20dee4bda65911fce29198d4f59
   }
 ]
