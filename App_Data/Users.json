@@ -1,4 +1,4 @@
-[
+ [
   {
     "Name": "Modérateur",
     "Email": "admin@app.net",
@@ -64,7 +64,7 @@
     "Notify": true,
     "Avatar": "/App_Assets/Users/no_avatar.png",
     "Id": 4
-  }
+  },
   {
     "Name": "patrick",
     "Email": "nothisispatrick@yopmail.com",
@@ -74,6 +74,6 @@
     "Verified": true,
     "Notify": true,
     "Avatar": "/App_Assets/Users/patrick.png",
-    "Id": 3
+    "Id": 5
   }
 ]
