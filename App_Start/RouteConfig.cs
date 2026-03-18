@@ -9,6 +9,11 @@ namespace Wikimedia
 {
     public class RouteConfig
     {
+        public static string DefaultAction()
+        {
+            return "/Medias/List";
+        }
+
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
@@ -18,11 +23,6 @@ namespace Wikimedia
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Accounts", action = "Login", id = UrlParameter.Optional }
             );
-        }
-
-        public static string DefaultAction()
-        {
-            return "/Medias/List";
         }
     }
 }

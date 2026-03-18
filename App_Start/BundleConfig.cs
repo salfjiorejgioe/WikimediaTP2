@@ -12,13 +12,21 @@ namespace Wikimedia
                             "~/Scripts/validation.js",
                             "~/Scripts/jquery-maskedinput.js",
                             "~/Scripts/bootbox.js",
+                            "~/Scripts/selection.js",
+                            "~/Scripts/SiteScripts.js",
+                            "~/Scripts/session.js",
+                            "~/Scripts/SiteNotificationsHandler.js",
                             "~/Scripts/autoRefreshPanel.js",
                             "~/Scripts/image-control.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                         "~/Content/_layout.css",
+                        "~/Content/Accounts.css",
+                        "~/Content/popup.css",
+                        "~/Content/Selection.css",
                         "~/Content/site.css",
                         "~/Content/menu.css",
+                        "~/Content/Icons.css",
                         "~/Content/media.css",
                         "~/Content/image-control.css",
                         "~/Content/jqui-custom-datepicker.css"));

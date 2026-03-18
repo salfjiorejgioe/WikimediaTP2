@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using WebApplication;
 using Wikimedia;
 using static Controllers.AccessControl;
 
@@ -43,6 +42,7 @@ namespace Controllers
             {
                 if (success) DB.Events.Add("Logout"); else DB.Events.Add("Expired/blocked");
                 if (Models.User.ConnectedUser != null)
+                    DB.Logins.UpdateLogoutByUserId(Models.User.ConnectedUser.Id);
                 Models.User.ConnectedUser.Online = false;
                 Models.User.ConnectedUser = null;
             }
