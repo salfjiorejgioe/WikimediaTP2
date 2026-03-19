@@ -17,11 +17,5 @@ namespace Wikimedia
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
-        protected void Session_End()
-        {
-            var connectedUser = Models.User.ConnectedUser;
-            if (connectedUser != null)
-                connectedUser.Online = false;
-        }
     }
 }
