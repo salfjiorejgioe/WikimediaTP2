@@ -16,9 +16,7 @@ namespace DAL
         #endregion
 
         public static MediasRepository Medias { get; set; } = new MediasRepository();
-
-
-
+        
         static public UsersRepository Users { get; set; }
             = new UsersRepository();
 
@@ -32,11 +30,9 @@ namespace DAL
             = new EventsRepository();
 
         static public Repository<UnverifiedEmail> UnverifiedEmails { get; set; }
-         = new Repository<UnverifiedEmail>();
+            = new Repository<UnverifiedEmail>();
 
         static public Repository<RenewPasswordCommand> RenewPasswordCommands { get; set; }
             = new Repository<RenewPasswordCommand>();
     }
-
-
 }
