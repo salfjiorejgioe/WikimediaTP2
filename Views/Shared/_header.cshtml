@@ -11,12 +11,6 @@
     string checkSortByDate = sortByTitle ? "" : "fa-check";
     var Categories = (List<string>)Session["Categories"];
     bool SearchAscending = Session["SortAscending"] != null ? (bool)Session["SortAscending"] : true;
-
-    bool userConnected = Models.User.ConnectedUser != null;
-    bool userIsAdmin = userConnected ? Models.User.ConnectedUser.IsAdmin : false;
-    bool userCanWrite = userConnected ? Models.User.ConnectedUser.CanWrite : false;
-
-    string index = RouteConfig.DefaultAction();
 }
 
 <div class="section roundedBorder">
@@ -26,26 +20,9 @@
         <!-- Direct action context command icons -->
         @switch (action)
         {
-            case "login": break;
-            case "subscribe":
-                <div id="mainMenuPanel" class="menu">
-                    <i class="cmdIcon submitCmd fa fa-circle-check" title="Soumettre" onclick="document.getElementById('submit').click()"></i>
-                    <a class="cmdIcon fa fa-square-xmark" title="Annuler" onclick="history.back()"></a>
-                </div>
-                break;
-            case "editprofil":
-                <div id="mainMenuPanel" class="menu">
-                    <i class="cmdIcon submitCmd fa fa-circle-check" title="Soumettre" onclick="document.getElementById('submit').click()"></i>
-                    <a class="cmdIcon fa fa-square-xmark" title="Annuler" onclick="history.back()"></a>
-                </div>
-                break;
-
             case "list":
                 <div id="mainMenuPanel" class="menu">
-                    @if (userCanWrite)
-                    {
-                        <a href="/@controller/Create" class="cmdIcon fa fa-circle-plus" title="Ajouter..."></a>
-                    }
+                    <a href="/@controller/Create" class="cmdIcon fa fa-circle-plus" title="Ajouter..."></a>
                     @if (SearchAscending)
                     {
                         <a href="/@controller/ToggleSort" id="cmdToggleSearch" class="cmdIcon fa fa-arrow-down-short-wide" title="Tri ascendant..."></a>
@@ -64,42 +41,15 @@
                         </div>
                         <!-- Menu items -->
                         <div class="dropdown-menu noselect" id="DDMenu">
-
                             <div class="dropdown-item item-layout">
                                 <i class="menuIcon fa fa-address-card"></i>
                                 <a href="/Accounts/EditProfil">Profil...</a>
                             </div>
+
                             <div class="dropdown-item item-layout">
                                 <i class="menuIcon fa fa-sign-out"></i>
                                 <a href="/Accounts/Logout">Déconnexion...</a>
                             </div>
-
-                            @if (userIsAdmin)
-                            {
-                                <div class="dropdown-divider"></div>
-
-                                <div class="dropdown-item item-layout">
-                                    <i class="menuIcon fa fa-users"></i>
-                                    <a href="/Accounts/ManageUsers">
-                                        Gestion des usagers...
-                                    </a>
-                                </div>
-                                <div class="dropdown-item item-layout">
-                                    <i class="menuIcon fa fa-calendar-days"></i>
-                                    <a href="/Accounts/LoginsJournal">
-                                        Historique de connexions...
-                                    </a>
-                                </div>
-                                <div class="dropdown-item item-layout">
-                                    <i class="menuIcon fa fa-gear"></i>
-                                    <a href="/Accounts/EventsJournal">
-                                        Journal d'activités...
-                                    </a>
-                                </div>
-                            }
-
-                            <div class="dropdown-divider"></div>
-
                             <div class="dropdown-item item-layout">
                                 <i class="menuIcon fa @checkSortByTitle"></i>
                                 <a href="/@controller/SortByTitle">Trier par titre</a>
@@ -110,14 +60,13 @@
                             </div>
 
                             <div class="dropdown-divider"></div>
-
                             <div class="dropdown-item item-layout">
                                 <i class="menuIcon fa fa-info-circle"></i>
                                 <a href="/@controller/About">À propos...</a>
                             </div>
                         </div>
+                        </div>
                     </div>
-                </div>
                 break;
             case "details":
                 <div id="mainMenuPanel" class="menu">
@@ -130,29 +79,20 @@
                 </div>
                 break;
             case "create":
-                if (userCanWrite)
-                {
-                    <div id="mainMenuPanel" class="menu">
-                        <i class="cmdIcon submitCmd fa fa-circle-check" title="Soumettre" onclick="document.getElementById('submit').click()"></i>
-                        <a href="/@controller/List" class="cmdIcon fa fa-square-xmark" title="Annuler"></a>
-                    </div>
-                }
+                <div id="mainMenuPanel" class="menu">
+                    <i class="cmdIcon submitCmd fa fa-circle-check" title="Soumettre" onclick="document.getElementById('submit').click()"></i>
+                    <a href="/@controller/List" class="cmdIcon fa fa-square-xmark" title="Annuler"></a>
+                </div>
                 break;
             case "edit":
-                if (userCanWrite)
-                {
-                    <div id="mainMenuPanel" class="menu">
-                        <i class="cmdIcon submitCmd fa fa-circle-check" title="Soumettre" onclick="document.getElementById('submit').click()"></i>
-                        <a href="/@controller/Details/@currentMediaId" class="cmdIcon fa fa-square-xmark" title="Annuler"></a>
-                    </div>
-                }
+                <div id="mainMenuPanel" class="menu">
+                    <i class="cmdIcon submitCmd fa fa-circle-check" title="Soumettre" onclick="document.getElementById('submit').click()"></i>
+                    <a href="/@controller/Details/@currentMediaId" class="cmdIcon fa fa-square-xmark" title="Annuler"></a>
+                </div>
                 break;
-            case "loginsjournal":
-            case "eventsjournal":
-            case "manageusers":
             case "about":
                 <div id="mainMenuPanel" class="menu">
-                    <a href="@index" class="cmdIcon fa fa-square-xmark" title="Retour"></a>
+                    <a href="/@controller/List" class="cmdIcon fa fa-square-xmark" title="Retour"></a>
                 </div>
                 break;
         }

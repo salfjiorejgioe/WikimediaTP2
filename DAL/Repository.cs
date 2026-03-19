@@ -132,17 +132,14 @@ namespace DAL
         {
             get
             {
-                if (IsMarkedChanged)
+                string key = this.GetType().Name;
+                if (((string)HttpContext.Current.Session[key] != _SerialNumber))
                 {
-                    HttpContext.Current.Session[this.GetType().Name] = _SerialNumber;
+                    HttpContext.Current.Session[key] = _SerialNumber;
                     return true;
                 }
                 return false;
             }
-        }
-        public bool IsMarkedChanged
-        {
-            get { return ((string)HttpContext.Current.Session[this.GetType().Name] != _SerialNumber); }
         }
         public void BeginTransaction()
         {

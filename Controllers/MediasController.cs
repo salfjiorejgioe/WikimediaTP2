@@ -5,16 +5,12 @@ using System.Linq;
 using System.Web.Mvc;
 using static Controllers.AccessControl;
 
+
 [UserAccess(Access.View)]
 public class MediasController : Controller
 {
-
     private void InitSessionVariables()
     {
-        // Session is a dictionary that hold keys values specific to a session
-        // Each user of this web application have their own Session
-        // A Session has a default time out of 20 minutes, after time out it is cleared
-
         if (Session["CurrentMediaId"] == null) Session["CurrentMediaId"] = 0;
         if (Session["CurrentMediaTitle"] == null) Session["CurrentMediaTitle"] = "";
         if (Session["Search"] == null) Session["Search"] = false;
@@ -37,8 +33,8 @@ public class MediasController : Controller
         if (Session["SelectedCategory"] != null)
         {
             var selectedCategory = (string)Session["SelectedCategory"];
-            var Medias = DB.Medias.ToList().Where(c => c.Category == selectedCategory);
-            if (Medias.Count() == 0)
+            var medias = DB.Medias.ToList().Where(c => c.Category == selectedCategory);
+            if (medias.Count() == 0)
                 Session["SelectedCategory"] = "";
         }
     }
@@ -59,57 +55,37 @@ public class MediasController : Controller
         }
         catch (System.Exception ex)
         {
-            return Content("Erreur interne" + ex.Message, "text/html");
+            return Content("Erreur interne " + ex.Message, "text/html");
         }
     }
-    // This action produce a partial view of Medias
-    // It is meant to be called by an AJAX request (from client script)
-    public ActionResult GetMediaDetails(bool forceRefresh = false)
-    {
-        try
-        {
-            InitSessionVariables();
 
-            int mediaId = (int)Session["CurrentMediaId"];
-            Media Media = DB.Medias.Get(mediaId);
-            if (Media != null)
-            {
-                if (DB.Users.HasChanged || DB.Medias.HasChanged || forceRefresh)
-                {
-                    return PartialView(Media);
-                }
-            }
-            return null;
-        }
-        catch (System.Exception ex)
-        {
-            return Content("Erreur interne" + ex.Message, "text/html");
-        }
-    }
     public ActionResult GetMedias(bool forceRefresh = false)
     {
         try
         {
             IEnumerable<Media> result = null;
-            // Must evaluate HasChanged before forceRefresh, this will fix an usefull refresh
+
             if (DB.Medias.HasChanged || forceRefresh)
             {
-                // forceRefresh is true when a related view is produce
-                // DB.Medias.HasChanged is true when a change has been applied on any Media
-
                 InitSessionVariables();
                 bool search = (bool)Session["Search"];
                 string searchString = (string)Session["SearchString"];
 
                 if (search)
                 {
-                    result = DB.Medias.ToList().Where(c => c.Title.ToLower().Contains(searchString)).OrderBy(c => c.Title);
-                    string SelectedCategory = (string)Session["SelectedCategory"];
-                    if (SelectedCategory != "")
-                        result = result.Where(c => c.Category == SelectedCategory);
+                    result = DB.Medias.ToList()
+                        .Where(c => c.Title.ToLower().Contains(searchString))
+                        .OrderBy(c => c.Title);
+
+                    string selectedCategory = (string)Session["SelectedCategory"];
+                    if (selectedCategory != "")
+                        result = result.Where(c => c.Category == selectedCategory);
                 }
                 else
+                {
                     result = DB.Medias.ToList();
+                }
+
                 if ((bool)Session["SortAscending"])
                 {
                     if ((bool)Session["SortByTitle"])
@@ -124,17 +100,35 @@ public class MediasController : Controller
                     else
                         result = result.OrderByDescending(c => c.PublishDate);
                 }
+
                 return PartialView(result);
             }
             return null;
         }
         catch (System.Exception ex)
         {
-            return Content("Erreur interne" + ex.Message, "text/html");
+            return Content("Erreur interne " + ex.Message, "text/html");
         }
     }
 
+    public ActionResult GetMediaDetails(bool forceRefresh = false)
+    {
+        int id = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
 
+        if (id != 0)
+        {
+            if (DB.Medias.HasChanged || forceRefresh)
+            {
+                Media media = DB.Medias.Get(id);
+                if (media != null)
+                {
+                    return PartialView(media);
+                }
+            }
+        }
+
+        return null;
+    }
     public ActionResult List()
     {
         ResetCurrentMediaInfo();
@@ -147,16 +141,19 @@ public class MediasController : Controller
         Session["Search"] = !(bool)Session["Search"];
         return RedirectToAction("List");
     }
+
     public ActionResult SortByTitle()
     {
         Session["SortByTitle"] = true;
         return RedirectToAction("List");
     }
+
     public ActionResult ToggleSort()
     {
         Session["SortAscending"] = !(bool)Session["SortAscending"];
         return RedirectToAction("List");
     }
+
     public ActionResult SortByDate()
     {
         Session["SortByTitle"] = false;
@@ -174,23 +171,24 @@ public class MediasController : Controller
         Session["SelectedCategory"] = value;
         return RedirectToAction("List");
     }
+
     public ActionResult About()
     {
         return View();
     }
 
-
     public ActionResult Details(int id)
     {
         Session["CurrentMediaId"] = id;
-        Media Media = DB.Medias.Get(id);
-        if (Media != null)
+        Media media = DB.Medias.Get(id);
+        if (media != null)
         {
-            Session["CurrentMediaTitle"] = Media.Title;
-            return View(Media);
+            Session["CurrentMediaTitle"] = media.Title;
+            return View(media);
         }
         return RedirectToAction("List");
     }
+
     [UserAccess(Access.Write)]
     public ActionResult Create()
     {
@@ -198,57 +196,44 @@ public class MediasController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     [UserAccess(Access.Write)]
-    /* Install anti forgery token verification attribute.
-     * the goal is to prevent submission of data from a page 
-     * that has not been produced by this application*/
-    [ValidateAntiForgeryToken()]
-    public ActionResult Create(Media Media)
+    public ActionResult Create(Media media)
     {
-        DB.Medias.Add(Media);
+        DB.Medias.Add(media);
         return RedirectToAction("List");
     }
-    
+
     [UserAccess(Access.Write)]
     public ActionResult Edit()
     {
-        // Note that id is not provided has a parameter.
-        // It use the Session["CurrentMediaId"] set within
-        // Details(int id) action
-        // This way we prevent from malicious requests that could
-        // modify or delete programatically the all the Medias
-
         int id = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
         if (id != 0)
         {
-            Media Media = DB.Medias.Get(id);
-            if (Media != null)
-                return View(Media);
+            Media media = DB.Medias.Get(id);
+            if (media != null)
+                return View(media);
         }
         return RedirectToAction("List");
     }
-    
-    [UserAccess(Access.Write)]
-    [HttpPost]
-    [ValidateAntiForgeryToken()]
-    public ActionResult Edit(Media Media)
-    {
-        // Has explained earlier, id of Media is stored server side an not provided in form data
-        // passed in the method in order to prever from malicious requests
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [UserAccess(Access.Write)]
+    public ActionResult Edit(Media media)
+    {
         int id = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
 
-        // Make sure that the Media of id really exist
         Media storedMedia = DB.Medias.Get(id);
         if (storedMedia != null)
         {
-            Media.Id = id; // patch the Id
-            Media.PublishDate = storedMedia.PublishDate; // keep orignal PublishDate
-            DB.Medias.Update(Media);
+            media.Id = id;
+            media.PublishDate = storedMedia.PublishDate;
+            DB.Medias.Update(media);
         }
         return RedirectToAction("Details/" + id);
     }
-    
+
     [UserAccess(Access.Write)]
     public ActionResult Delete()
     {
@@ -259,17 +244,16 @@ public class MediasController : Controller
         }
         return RedirectToAction("List");
     }
-
     // This action is meant to be called by an AJAX request
     // Return true if there is a name conflict
     // Look into validation.js for more details
-    // and also into Views/Medias/MediaForm.cshtml
+    // and also into Views/Medias/MediaForm.cshtml public JsonResult CheckConflict(string YoutubeId)
     public JsonResult CheckConflict(string YoutubeId)
     {
         int id = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
-        // Response json value true if name is used in other Medias than the current Media
-        return Json(DB.Medias.ToList().Where(c => c.YoutubeId == YoutubeId && c.Id != id).Any(),
-                    JsonRequestBehavior.AllowGet /* must have for CORS verification by client browser */);
+        return Json(
+            DB.Medias.ToList().Where(c => c.YoutubeId == YoutubeId && c.Id != id).Any(),
+            JsonRequestBehavior.AllowGet
+        );
     }
-
 }

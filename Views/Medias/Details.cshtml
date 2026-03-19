@@ -1,21 +1,43 @@
 ﻿@model Models.Media
-@{
-    ViewBag.PageTitle = "Détails";
-}
+@{ ViewBag.PageTitle = "Détails"; }
 
-<div id="detailsPanel" class="detailsPanel">
-    <!-- auto refreshed -->
+<div id="mediaDetailsContainer" class="detailsPanel">
+    <dl>
+        <dd>
+            @Model.Title
+        </dd>
+        <dd>
+            @Helper.YoutubePlayer(Model.YoutubeId)
+        </dd>
+        <dd class="description">
+            @Model.Description
+        </dd>
+        <dt>
+            Catégorie
+        </dt>
+
+        <dd>
+            @Model.Category
+        </dd>
+
+        <dt>
+            Date de publication
+        </dt>
+
+        <dd>
+            @Helper.When(Model.PublishDate)
+        </dd>
+
+    </dl>
+
 </div>
+<script>
+    function refreshDetails() {
+        $.get("/Medias/GetMediaDetails", function (data) {
+            if (data) {
+                $("#mediaDetailsContainer").html(data);
+            }
+        });
+    }
 
-@section Scripts {
-    <script>
-        $(() => {
-            newSession(600);
-            mediaDetails_ARP = new AutoRefreshedPanel("detailsPanel", "/Medias/GetMediaDetails", 5, mediaDetailsPostRefresh);
-        })
-        
-        function mediaDetailsPostRefresh() {
-           // todo
-        }
-     </script>
-}
+    setInterval(refreshDetails, 5000);</script>

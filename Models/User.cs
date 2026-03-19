@@ -94,7 +94,7 @@ namespace Models
             {
                 if (HttpContext.Current?.Session["ConnectedUser"] != null)
                 {
-                    if (DB.Users.IsMarkedChanged)
+                    if (DB.Users.HasChanged)
                     {
                         User connectedUser = ((User)HttpContext.Current.Session["ConnectedUser"]);
                         if (connectedUser != null)
