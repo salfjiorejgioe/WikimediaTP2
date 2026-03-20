@@ -272,4 +272,18 @@ public class MediasController : Controller
                     JsonRequestBehavior.AllowGet /* must have for CORS verification by client browser */);
     }
 
+    private bool IsAdmin()
+    {
+        return Models.User.ConnectedUser != null &&
+               Models.User.ConnectedUser.Access == Models.Access.Admin;
+    }
+
+    private bool IsOwnerOrAdmin(Media media)
+    {
+        if (media == null || Models.User.ConnectedUser == null)
+            return false;
+
+        return media.OwnerId == Models.User.ConnectedUser.Id || IsAdmin();
+    }
+
 }

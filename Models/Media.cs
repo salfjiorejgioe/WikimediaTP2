@@ -17,7 +17,13 @@ namespace Models
         public DateTime PublishDate { get; set; } = DateTime.Now;
         public int OwnerId { get; set; }
         [ForeignKey("OwnerId")]
-        public User Owner { get; set; }
+        public User Owner
+        {
+            get
+            {
+                return DB.Users.Get(OwnerId);
+            }
+        }
         public bool Shared { get; set; }
     }
 }
