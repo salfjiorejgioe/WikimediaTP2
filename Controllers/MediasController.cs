@@ -72,13 +72,12 @@ public class MediasController : Controller
 
             int mediaId = (int)Session["CurrentMediaId"];
             Media Media = DB.Medias.Get(mediaId);
-            if (Media != null)
+
+            if (DB.Users.HasChanged || DB.Medias.HasChanged || forceRefresh)
             {
-                if (DB.Users.HasChanged || DB.Medias.HasChanged || forceRefresh)
-                {
-                    return PartialView(Media);
-                }
+                return PartialView(Media);
             }
+
             return null;
         }
         catch (System.Exception ex)
@@ -124,6 +123,14 @@ public class MediasController : Controller
                     else
                         result = result.OrderByDescending(c => c.PublishDate);
                 }
+
+                var users = DB.Users.ToList();
+
+                foreach(var media in result)
+                {
+                    media.Owner = users.FirstOrDefault(u => u.Id.ToString() == media.OwnerId);
+                }
+
                 return PartialView(result);
             }
             return null;

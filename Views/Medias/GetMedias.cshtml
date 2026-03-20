@@ -2,6 +2,7 @@
 
 @{
     var currentUserId = Models.User.ConnectedUser.Id.ToString();
+    
 }
 
 
@@ -10,9 +11,9 @@
 
     foreach (var media in Model)
     {
-        if (media.Shared == true ||media.OwnerId == currentUserId)
+        if (media.Shared ||media.OwnerId == currentUserId)
         {
-
+            var user = media.Owner;
 
 
         <div class="mediaLayout">
@@ -22,7 +23,7 @@
 
 
 
-                    <img src=" @media.Owner.Avatar" class="" /> @*//obtenir avatar du propriétaire du média*@
+                    <img src="@Helper.AvatarUser(user)" class="" /> @*//obtenir avatar du propriétaire du média*@
 
 
                     @if (media.Shared)
