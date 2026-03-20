@@ -56,13 +56,8 @@
     <img id="previewThumbnail" class="mediaThumbnailBig" src="https://img.youtube.com/vi/@Model.YoutubeId/mqdefault.jpg" loading="lazy">
     <input id="submit" type="submit" value="Enregistrer" class="btn btn-primary" style="display:none">
     <label class="form-label" for="SharedCB">Partage</label>
-    <div>
-        <input type="checkbox"
-               id="SharedCB"
-               name="SharedCB"
-               class="form-control"
-               placeholder="Activé"
-               value="@Model.Shared" />
-        <label for="Shared" @*class="form-label*@>Activer</label>
+    <div style="text-align:left; display: grid; grid-template-columns:15px 10px auto">
+        <input type="checkbox" name="SharedCB" id="SharedCB" checked="">
+        <label for="SharedCB" style="margin-left:4px">Activé</label>
     </div>
 </form>

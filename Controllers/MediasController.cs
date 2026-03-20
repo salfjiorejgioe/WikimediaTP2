@@ -128,7 +128,7 @@ public class MediasController : Controller
 
                 foreach(var media in result)
                 {
-                    media.Owner = users.FirstOrDefault(u => u.Id.ToString() == media.OwnerId);
+                    media.Owner = users.FirstOrDefault(userr => userr.Id == media.OwnerId);
                 }
 
                 return PartialView(result);

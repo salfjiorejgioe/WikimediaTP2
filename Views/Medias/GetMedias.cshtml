@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Models.Media>
 
 @{
-    var currentUserId = Models.User.ConnectedUser.Id.ToString();
+    var currentUserId = Models.User.ConnectedUser.Id;
     
 }
 
@@ -11,29 +11,27 @@
 
     foreach (var media in Model)
     {
-        if (media.Shared ||media.OwnerId == currentUserId)
+        if (media.Shared || media.OwnerId == currentUserId)
         {
             var user = media.Owner;
 
 
         <div class="mediaLayout">
             <a href="/Medias/Details/@media.Id" title="Voir les détails de @media.Title" style="text-decoration:none; width:100% !important">
-                <div class="mediaThumbnail"
-                     style="background-image:url('https://img.youtube.com/vi/@media.YoutubeId/mqdefault.jpg');">
+                <div class="mediaThumbnail "
+                     style="background-image:url('https://img.youtube.com/vi/@media.YoutubeId/mqdefault.jpg');padding:6px; display:flex; flex-flow:row-reverse;">
+                    @{ 
+                        var avatarUrl = user.Avatar;
+                     }
 
 
-
-                    <img src="@Helper.AvatarUser(user)" class="" /> @*//obtenir avatar du propriétaire du média*@
-
-
-                    @if (media.Shared)
+                    <div class="UserSmallAvatar transparentBackground" style="background: url(@user.Avatar); border:0.1px solid white;"></div>
+                    @if (media.Shared && media.OwnerId == currentUserId)
                     {
-                        <div class="sharedIcon"></div>// manque icon
+                        <img src="~/Content/ui-images/shared.png" class="UserSmallAvatar transparentBackground">
                     }
-
-
-
                 </div>
+             
             </a>
 
             <div class="ellipsis" style="margin-left: 4px; margin-right: 4px; font-size: 0.8em; font-weight: bold">

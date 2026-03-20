@@ -15,7 +15,7 @@ namespace Models
         public string Description { get; set; }
         public string YoutubeId { get; set; }
         public DateTime PublishDate { get; set; } = DateTime.Now;
-        public string OwnerId { get; set; }
+        public int OwnerId { get; set; }
         [ForeignKey("OwnerId")]
         public User Owner { get; set; }
         public bool Shared { get; set; }
