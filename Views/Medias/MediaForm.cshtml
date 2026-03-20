@@ -55,4 +55,14 @@
            CustomErrorMessage="Cet id est déjà utilisé" />
     <img id="previewThumbnail" class="mediaThumbnailBig" src="https://img.youtube.com/vi/@Model.YoutubeId/mqdefault.jpg" loading="lazy">
     <input id="submit" type="submit" value="Enregistrer" class="btn btn-primary" style="display:none">
+    <label class="form-label" for="Shared">Partage</label>
+    <div>
+        <input type="checkbox"
+               id="Shared"
+               name="Shared"
+               class="form-control"
+               placeholder="Activé"
+               value="@Model.Shared" />
+        <label for="Shared" @*class="form-label*@>Activer</label>
+    </div>
 </form>
