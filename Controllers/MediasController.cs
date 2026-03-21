@@ -64,6 +64,9 @@ public class MediasController : Controller
     }
     // This action produce a partial view of Medias
     // It is meant to be called by an AJAX request (from client script)
+
+
+
     public ActionResult GetMediaDetails(bool forceRefresh = false)
     {
         try
@@ -126,7 +129,7 @@ public class MediasController : Controller
 
                 var users = DB.Users.ToList();
 
-                foreach(var media in result)
+                foreach (var media in result)
                 {
                     media.Owner = users.FirstOrDefault(userr => userr.Id == media.OwnerId);
                 }

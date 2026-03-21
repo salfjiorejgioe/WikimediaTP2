@@ -9,21 +9,15 @@ namespace Models
 {
     public class Media : Record
     {
-        
+
         public string Title { get; set; }
         public string Category { get; set; }
         public string Description { get; set; }
         public string YoutubeId { get; set; }
         public DateTime PublishDate { get; set; } = DateTime.Now;
         public int OwnerId { get; set; }
-        [ForeignKey("OwnerId")]
-        public User Owner
-        {
-            get
-            {
-                return DB.Users.Get(OwnerId);
-            }
-        }
+
+        public User Owner { get; set; }
         public bool Shared { get; set; }
     }
 }
