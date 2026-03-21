@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Assets\Users\5aa8957d-e980-4cac-b915-aaa63d0909f1.jpeg" />
+    <Content Include="App_Assets\Users\kirky.png" />
     <Content Include="App_Assets\Users\no_avatar.png" />
     <Content Include="App_Data\iso-3166.txt" />
     <Content Include="Content\Accounts.css" />
