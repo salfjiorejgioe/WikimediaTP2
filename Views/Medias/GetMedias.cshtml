@@ -4,43 +4,37 @@
     var currentUserId = Models.User.ConnectedUser.Id;
 }
 
-@if (Model.Count() != 0)
+@if (Model != null && Model.Any())
 {
     foreach (var media in Model)
     {
         if (media.Shared || media.OwnerId == currentUserId)
         {
-            bool isOwner = media.OwnerId == currentUserId;
+            var user = media.Owner;
 
             <div class="mediaLayout">
                 <a href="/Medias/Details/@media.Id" title="Voir les détails de @media.Title" style="text-decoration:none; width:100% !important">
                     <div class="mediaThumbnail"
-                         style="background-image:url('https://img.youtube.com/vi/@media.YoutubeId/mqdefault.jpg');">
+                         style="background-image:url('https://img.youtube.com/vi/@media.YoutubeId/mqdefault.jpg'); padding:6px; display:flex; flex-flow:row-reverse;">
 
-                        <img src="@media.Owner.Avatar" class="ownerAvatar" alt="Avatar du créateur" />
+                        <div class="UserSmallAvatar transparentBackground"
+                             style="background: url('@user.Avatar'); border:0.1px solid white;">
+                        </div>
 
-                        @if (isOwner)
+                        @if (media.Shared && media.OwnerId == currentUserId)
                         {
-                            <div class="sharedIcon" title="@(media.Shared ? "Partagé" : "Privé")">
-                                @if (media.Shared)
-                                {
-                                    <img src="/Content/ui-images/shared.png" alt="Partagé" />
-                                }
-                                else
-                                {
-                                    <i class="fa fa-lock"></i>
-                                }
-                            </div>
+                            <img src="~/Content/ui-images/shared.png" class="UserSmallAvatar transparentBackground" alt="Partagé" />
                         }
-
                     </div>
                 </a>
 
                 <div class="ellipsis" style="margin-left: 4px; margin-right: 4px; font-size: 0.8em; font-weight: bold">
                     @media.Title
                 </div>
+
                 <div style="margin-left: 4px; color: gray; font-size: 0.65em">
-                    @media.Category <br /> @Helper.When(media.PublishDate)
+                    @media.Category <br />
+                    @Helper.When(media.PublishDate)
                 </div>
             </div>
         }
@@ -48,5 +42,5 @@
 }
 else
 {
-    <h3>Aucun résulat</h3>
+    <h3>Aucun résultat</h3>
 }
