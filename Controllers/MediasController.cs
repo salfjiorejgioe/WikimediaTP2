@@ -224,6 +224,9 @@ public class MediasController : Controller
     public ActionResult Create(Media media)
     {
         media.OwnerId = Models.User.ConnectedUser.Id;
+
+     
+
         DB.Medias.Add(media);
         return RedirectToAction("List");
     }
@@ -237,37 +240,33 @@ public class MediasController : Controller
         // modify or delete programatically the all the Medias
 
 
-        
-    int id = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
 
-    if (id != 0)
-    {
-        Media media = DB.Medias.Get(id);
-        if (media != null)
+        int id = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
+
+        if (id != 0)
         {
-            if (!IsOwnerOrAdmin(media))
-                return RedirectToAction("List");
+            Media media = DB.Medias.Get(id);
+            if (media != null)
+            {
+                if (!IsOwnerOrAdmin(media))
+                    return RedirectToAction("List");
 
-            return View(media);
+                return View(media);
+            }
         }
-    }
 
-    return RedirectToAction("List");
+        return RedirectToAction("List");
 
     }
 
     [UserAccess(Access.Write)]
     [HttpPost]
     [ValidateAntiForgeryToken()]
+    [UserAccess(Access.Write)]
     public ActionResult Edit(Media media)
     {
-        // Has explained earlier, id of Media is stored server side an not provided in form data
-        // passed in the method in order to prever from malicious requests
-
         int id = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
 
-
-        // Make sure that the Media of id really exist
         Media storedMedia = DB.Medias.Get(id);
         if (storedMedia != null)
         {
@@ -276,13 +275,13 @@ public class MediasController : Controller
 
             media.Id = id;
             media.PublishDate = storedMedia.PublishDate;
-            media.OwnerId = storedMedia.OwnerId; // protège le créateur
+            media.OwnerId = storedMedia.OwnerId;
             DB.Medias.Update(media);
         }
 
-        return RedirectToAction("Details/" + id);
+        return RedirectToAction("List");
     }
-    
+
     [UserAccess(Access.Write)]
     public ActionResult Delete()
     {

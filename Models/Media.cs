@@ -18,6 +18,6 @@ namespace Models
         public int OwnerId { get; set; }
         [ForeignKey("OwnerId")]
         public User Owner { get; set; }
-        public bool Shared { get; set; }
+        public bool Shared { get; set; } = true;
     }
 }

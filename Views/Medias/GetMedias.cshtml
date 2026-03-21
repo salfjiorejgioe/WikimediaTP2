@@ -2,20 +2,21 @@
 
 @{
     var currentUserId = Models.User.ConnectedUser.Id;
+    bool isAdmin = Models.User.ConnectedUser.Access == Models.Access.Admin;
 }
 
 @if (Model != null && Model.Any())
 {
     foreach (var media in Model)
     {
-        if (media.Shared || media.OwnerId == currentUserId)
+        if (media.Shared || media.OwnerId == currentUserId || isAdmin)
         {
             var user = media.Owner;
 
             <div class="mediaLayout">
                 <a href="/Medias/Details/@media.Id" title="Voir les détails de @media.Title" style="text-decoration:none; width:100% !important">
                     <div class="mediaThumbnail"
-                         style="background-image:url('https://img.youtube.com/vi/@media.YoutubeId/mqdefault.jpg'); padding:6px; display:flex; flex-flow:row-reverse;">
+                         style="background-image:url('https://img.youtube.com/vi/@media.YoutubeId/mqdefault.jpg');padding:6px; display:flex; flex-flow:row-reverse;">
 
                         <div class="UserSmallAvatar transparentBackground"
                              style="background: url('@user.Avatar'); border:0.1px solid white;">
@@ -23,7 +24,7 @@
 
                         @if (media.Shared && media.OwnerId == currentUserId)
                         {
-                            <img src="~/Content/ui-images/shared.png" class="UserSmallAvatar transparentBackground" alt="Partagé" />
+                            <img src="~/Content/ui-images/shared.png" class="UserSmallAvatar transparentBackground" alt="Partagé">
                         }
                     </div>
                 </a>

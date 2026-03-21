@@ -55,9 +55,9 @@
            CustomErrorMessage="Cet id est déjà utilisé" />
     <img id="previewThumbnail" class="mediaThumbnailBig" src="https://img.youtube.com/vi/@Model.YoutubeId/mqdefault.jpg" loading="lazy">
     <input id="submit" type="submit" value="Enregistrer" class="btn btn-primary" style="display:none">
-    <input type="checkbox"
-           id="Shared"
-           name="Shared"
-           @(Model.Shared ? "checked" : "") />
-    <label for="Shared">Activer</label>
+    <label for="Shared">Partage</label>
+    <div>
+        @Html.CheckBoxFor(model => model.Shared)
+        <label for="Shared">Activer</label>
+    </div>
 </form>
