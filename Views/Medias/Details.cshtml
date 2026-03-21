@@ -5,31 +5,47 @@
 
 <div id="detailsPanel" class="detailsPanel">
     <dl>
+        <dd>
+            @Model.Title
+        </dd>
+
+        <dd>
+            @Helper.YoutubePlayer(Model.YoutubeId)
+        </dd>
+
+        <dd class="description">
+            @Model.Description
+        </dd>
+
+        <dt>
+            Catégorie
+        </dt>
+
+        <dd>
+            @Model.Category
+        </dd>
+
+        <dt>
+            Date de publication
+        </dt>
+
+        <dd>
+            @Helper.When(Model.PublishDate)
+        </dd>
+
         <dt>Créateur</dt>
-        <dd style="display:flex; align-items:center; gap:10px;">
-            <img src="@Model.Owner.Avatar" class="ownerAvatarSmall" />
-            <span>@Model.Owner.Name</span>
+        <dd class="userItem">
+            <div class="UserMediumAvatar"
+                 style="background:url('@Model.Owner.Avatar')">
+            </div>
+
+            <span class="ellipsis">@Model.Owner.Name</span>
 
             @if (Model.OwnerId == Models.User.ConnectedUser.Id && Model.Shared)
             {
-                <span style="color:green; font-weight:bold;">[Partagé]</span>
+                <span class="sharedTag">[Partagé]</span>
             }
         </dd>
-
-        <dt>Titre</dt>
-        <dd>@Model.Title</dd>
-
-        <dt>Catégorie</dt>
-        <dd>@Model.Category</dd>
-
-        <dt>Description</dt>
-        <dd>@Model.Description</dd>
-
-        <dt>Vidéo</dt>
-        <dd>@Helper.YoutubePlayer(Model.YoutubeId)</dd>
-
-        <dt>Date de publication</dt>
-        <dd>@Helper.When(Model.PublishDate)</dd>
     </dl>
 </div>
 
@@ -37,11 +53,15 @@
     <script>
         $(() => {
             newSession(600);
-            mediaDetails_ARP = new AutoRefreshedPanel("detailsPanel", "/Medias/GetMediaDetails", 5, mediaDetailsPostRefresh);
-        })
+            mediaDetails_ARP = new AutoRefreshedPanel(
+                "detailsPanel",
+                "/Medias/GetMediaDetails",
+                5,
+                mediaDetailsPostRefresh
+            );
+        });
 
         function mediaDetailsPostRefresh() {
-            // todo
         }
     </script>
 }

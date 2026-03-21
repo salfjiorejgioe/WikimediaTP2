@@ -196,12 +196,17 @@ public class MediasController : Controller
     public ActionResult Details(int id)
     {
         Session["CurrentMediaId"] = id;
-        Media Media = DB.Medias.Get(id);
-        if (Media != null)
+        Media media = DB.Medias.Get(id);
+
+        if (media != null)
         {
-            Session["CurrentMediaTitle"] = Media.Title;
-            return View(Media);
+            if (!media.Shared && !IsOwnerOrAdmin(media))
+                return RedirectToAction("List");
+
+            Session["CurrentMediaTitle"] = media.Title;
+            return View(media);
         }
+
         return RedirectToAction("List");
     }
     [UserAccess(Access.Write)]
@@ -216,12 +221,12 @@ public class MediasController : Controller
      * the goal is to prevent submission of data from a page 
      * that has not been produced by this application*/
     [ValidateAntiForgeryToken()]
-    public ActionResult Create(Media Media)
+    public ActionResult Create(Media media)
     {
-        DB.Medias.Add(Media);
+        media.OwnerId = Models.User.ConnectedUser.Id;
+        DB.Medias.Add(media);
         return RedirectToAction("List");
     }
-    
     [UserAccess(Access.Write)]
     public ActionResult Edit()
     {
@@ -231,34 +236,50 @@ public class MediasController : Controller
         // This way we prevent from malicious requests that could
         // modify or delete programatically the all the Medias
 
-        int id = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
-        if (id != 0)
+
+        
+    int id = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
+
+    if (id != 0)
+    {
+        Media media = DB.Medias.Get(id);
+        if (media != null)
         {
-            Media Media = DB.Medias.Get(id);
-            if (Media != null)
-                return View(Media);
+            if (!IsOwnerOrAdmin(media))
+                return RedirectToAction("List");
+
+            return View(media);
         }
-        return RedirectToAction("List");
     }
-    
+
+    return RedirectToAction("List");
+
+    }
+
     [UserAccess(Access.Write)]
     [HttpPost]
     [ValidateAntiForgeryToken()]
-    public ActionResult Edit(Media Media)
+    public ActionResult Edit(Media media)
     {
         // Has explained earlier, id of Media is stored server side an not provided in form data
         // passed in the method in order to prever from malicious requests
 
         int id = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
 
+
         // Make sure that the Media of id really exist
         Media storedMedia = DB.Medias.Get(id);
         if (storedMedia != null)
         {
-            Media.Id = id; // patch the Id
-            Media.PublishDate = storedMedia.PublishDate; // keep orignal PublishDate
-            DB.Medias.Update(Media);
+            if (!IsOwnerOrAdmin(storedMedia))
+                return RedirectToAction("List");
+
+            media.Id = id;
+            media.PublishDate = storedMedia.PublishDate;
+            media.OwnerId = storedMedia.OwnerId; // protège le créateur
+            DB.Medias.Update(media);
         }
+
         return RedirectToAction("Details/" + id);
     }
     

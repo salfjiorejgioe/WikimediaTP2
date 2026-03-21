@@ -91,3 +91,9 @@
         height: 100%;
         object-fit: contain;
     }
+
+
+.sharedTag {
+    color: green;
+    font-weight: bold;
+}
