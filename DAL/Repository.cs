@@ -69,26 +69,17 @@ namespace DAL
         {
             MarkHasChanged();
             dataList.Clear();
-
             try
             {
-                string content = File.ReadAllText(FilePath).Trim();
-
-                if (string.IsNullOrWhiteSpace(content))
-                {
-                    dataList = new List<T>();
-                    return;
-                }
-
-                dataList = JsonConvert.DeserializeObject<List<T>>(content);
-
-                if (dataList == null)
-                    dataList = new List<T>();
+                using (var sr = new StreamReader(FilePath))
+                    dataList = JsonConvert.DeserializeObject<List<T>>(sr.ReadToEnd());
             }
             catch (Exception e)
             {
-                throw new Exception("Erreur lecture JSON dans : " + FilePath + " | Type: " + typeof(T).Name + " | " + e.Message, e);
+                throw e;
             }
+            if (dataList == null)
+                dataList = new List<T>();
         }
         // Mise à jour du fichier JSON avec les données présentes dans la cache dataList
         private void UpdateFile()
@@ -180,33 +171,31 @@ namespace DAL
         }
         // Init : reçoit le chemin d'accès absolue du fichier JSON
         // Cette méthode doit avoir été appelée avant tout
-     public virtual void Init(string filePath)
-{
-    if (!TransactionOnGoing) mutex.WaitOne();
-    try
-    {
-        FilePath = filePath;
-        if (string.IsNullOrEmpty(FilePath))
+        public virtual void Init(string filePath)
         {
-            throw new Exception("FilePath not set exception");
+            if (!TransactionOnGoing) mutex.WaitOne();
+            try
+            {
+                FilePath = filePath;
+                if (string.IsNullOrEmpty(FilePath))
+                {
+                    throw new Exception("FilePath not set exception");
+                }
+                if (!File.Exists(FilePath))
+                {
+                    using (StreamWriter sw = File.CreateText(FilePath)) { }
+                }
+                ReadFile();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (!TransactionOnGoing) mutex.ReleaseMutex();
+            }
         }
-
-        if (!File.Exists(FilePath))
-        {
-            File.WriteAllText(FilePath, "[]");
-        }
-
-        ReadFile();
-    }
-    catch (Exception e)
-    {
-        throw new Exception("Erreur Init repository : " + typeof(T).Name + " | Fichier : " + FilePath + " | " + e.Message, e);
-    }
-    finally
-    {
-        if (!TransactionOnGoing) mutex.ReleaseMutex();
-    }
-}
         public virtual void MarkHasChanged()
         {
             _SerialNumber = Guid.NewGuid().ToString();

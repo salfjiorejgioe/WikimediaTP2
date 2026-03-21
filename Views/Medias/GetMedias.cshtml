@@ -2,10 +2,6 @@
 
 @{
     var currentUserId = Models.User.ConnectedUser.Id;
-<<<<<<< HEAD
-=======
-    
->>>>>>> db8db91e3b7c975415952f73bef65098969742cb
 }
 
 @if (Model.Count() != 0)
@@ -14,20 +10,15 @@
     {
         if (media.Shared || media.OwnerId == currentUserId)
         {
-<<<<<<< HEAD
             bool isOwner = media.OwnerId == currentUserId;
 
             <div class="mediaLayout">
                 <a href="/Medias/Details/@media.Id" title="Voir les détails de @media.Title" style="text-decoration:none; width:100% !important">
                     <div class="mediaThumbnail"
                          style="background-image:url('https://img.youtube.com/vi/@media.YoutubeId/mqdefault.jpg');">
-=======
-            var user = media.Owner;
->>>>>>> db8db91e3b7c975415952f73bef65098969742cb
 
                         <img src="@media.Owner.Avatar" class="ownerAvatar" alt="Avatar du créateur" />
 
-<<<<<<< HEAD
                         @if (isOwner)
                         {
                             <div class="sharedIcon" title="@(media.Shared ? "Partagé" : "Privé")">
@@ -51,28 +42,6 @@
                 <div style="margin-left: 4px; color: gray; font-size: 0.65em">
                     @media.Category <br /> @Helper.When(media.PublishDate)
                 </div>
-=======
-        <div class="mediaLayout">
-            <a href="/Medias/Details/@media.Id" title="Voir les détails de @media.Title" style="text-decoration:none; width:100% !important">
-                <div class="mediaThumbnail "
-                     style="background-image:url('https://img.youtube.com/vi/@media.YoutubeId/mqdefault.jpg');padding:6px; display:flex; flex-flow:row-reverse;">
-                    @{ 
-                        var avatarUrl = user.Avatar;
-                     }
-
-
-                    <div class="UserSmallAvatar transparentBackground" style="background: url(@user.Avatar); border:0.1px solid white;"></div>
-                    @if (media.Shared && media.OwnerId == currentUserId)
-                    {
-                        <img src="~/Content/ui-images/shared.png" class="UserSmallAvatar transparentBackground">
-                    }
-                </div>
-             
-            </a>
-
-            <div class="ellipsis" style="margin-left: 4px; margin-right: 4px; font-size: 0.8em; font-weight: bold">
-                @media.Title
->>>>>>> db8db91e3b7c975415952f73bef65098969742cb
             </div>
         }
     }
