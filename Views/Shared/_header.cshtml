@@ -6,11 +6,24 @@
     int currentMediaId = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
     string currentMediaTitle = Session["currentMediaTitle"] != null ? (string)Session["currentMediaTitle"] : "";
     string selectedCategory = Session["CurrentSelectedCategory"] != null ? (string)Session["CurrentSelectedCategory"] : "";
-    bool sortByTitle = Session["SortByTitle"] != null ? (bool)Session["SortByTitle"] : true;
-    string checkSortByTitle = sortByTitle ? "fa-check" : "";
-    string checkSortByDate = sortByTitle ? "" : "fa-check";
+
     var Categories = (List<string>)Session["Categories"];
-    bool SearchAscending = Session["SortAscending"] != null ? (bool)Session["SortAscending"] : true;
+
+    /* Sort setup */
+    var mediaSortBy = Session["MediaSortBy"] != null ? (Models.MediaSortBy)Session["MediaSortBy"] : MediaSortBy.PublishDate;
+    bool SearchAscending = Session["SortAscending"] != null ? (bool)Session["SortAscending"] : false;
+
+    string checkSortByTitle = mediaSortBy == MediaSortBy.Title ? "fa-check" : "";
+    string checkSortByDate = mediaSortBy == MediaSortBy.PublishDate ? "fa-check" : "";
+
+    string iconSortBy = "";
+    string iconSortByTitle = "";
+
+    switch (mediaSortBy)
+    {
+        case MediaSortBy.Title: iconSortBy = "fa-solid fa-t"; iconSortByTitle = "Tri des vidéos par titre"; break;
+        case MediaSortBy.PublishDate: iconSortBy = "fa-regular fa-calendar"; iconSortByTitle = "Tri des vidéos par date de publication"; break;
+    }
 
     bool userConnected = Models.User.ConnectedUser != null;
     bool userIsAdmin = userConnected ? Models.User.ConnectedUser.IsAdmin : false;
@@ -46,6 +59,9 @@
                     {
                         <a href="/@controller/Create" class="cmdIcon fa fa-circle-plus" title="Ajouter..."></a>
                     }
+
+                    <a href="/@controller/ToggleMediaSort" class="cmdIcon @iconSortBy" title="@iconSortByTitle"></a>
+
                     @if (SearchAscending)
                     {
                         <a href="/@controller/ToggleSort" id="cmdToggleSearch" class="cmdIcon fa fa-arrow-down-short-wide" title="Tri ascendant..."></a>
@@ -101,12 +117,12 @@
                             <div class="dropdown-divider"></div>
 
                             <div class="dropdown-item item-layout">
-                                <i class="menuIcon fa @checkSortByTitle"></i>
-                                <a href="/@controller/SortByTitle">Trier par titre</a>
+                                <i class="menuIcon fa @checkSortByDate"></i>
+                                <a href="/Medias/SetMediaSortBy?mediaSortBy=@MediaSortBy.PublishDate">Trier par date</a>
                             </div>
                             <div class="dropdown-item item-layout">
-                                <i class="menuIcon fa @checkSortByDate"></i>
-                                <a href="/@controller/SortByDate">Trier par date</a>
+                                <i class="menuIcon fa @checkSortByTitle"></i>
+                                <a href="/Medias/SetMediaSortBy?mediaSortBy=@MediaSortBy.Title">Trier par titre</a>
                             </div>
 
                             <div class="dropdown-divider"></div>
@@ -121,11 +137,14 @@
                 break;
             case "details":
                 <div id="mainMenuPanel" class="menu">
-                    <a href="/@controller/Edit" class="cmdIcon fa fa-pen-to-square" title="Modifier..."></a>
-                    <i class="cmdIcon fa fa-trash-can"
-                       title="Effacer"
-                       onclick="bootbox.confirm(`<b style=color:red>Effacer le Media : </b><h3>@currentMediaTitle?</h3>`, function(result){ if (result) window.location = '/@controller/Delete'; })">
-                    </i>
+                    @if ((bool)Session["UserCanEditCurrentMedia"] && userCanWrite)
+                    {
+                        <a href="/@controller/Edit" class="cmdIcon fa fa-pen-to-square" title="Modifier..."></a>
+                        <i class="cmdIcon fa fa-trash-can"
+                           title="Effacer"
+                           onclick="bootbox.confirm(`<b style=color:red>Effacer le Media : </b><h3>@currentMediaTitle?</h3>`, function(result){ if (result) window.location = '/@controller/Delete'; })">
+                        </i>
+                    }
                     <a href="/@controller/List" class="cmdIcon fa fa-square-xmark" title="retour"></a>
                 </div>
                 break;

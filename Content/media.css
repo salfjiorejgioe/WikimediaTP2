@@ -60,40 +60,7 @@
     font-size: 1em !important;
 }
 
-
-
-.ownerAvatar {
-    position: absolute;
-    top: 6px;
-    left: 6px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid white;
-    background: white;
+.highlight {
+    background-color: yellow;
 }
-
-.mediaThumbnail {
-    position: relative;
-}
-
-.sharedIcon {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 20px;
-    height: 20px;
-}
-
-    .sharedIcon img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-
-
-.sharedTag {
-    color: green;
-    font-weight: bold;
-}
+  
