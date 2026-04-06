@@ -95,7 +95,7 @@ public class MediasController : Controller
         {
             IEnumerable<Media> result = null;
             // Must evaluate HasChanged before forceRefresh, this will fix an usefull refresh
-            if (DB.Medias.HasChanged || forceRefresh)
+            if (DB.Users.HasChanged || DB.Medias.HasChanged || forceRefresh) // refresh the list of Medias if there is a change in Medias or Users or if forceRefresh is true😭
             {
                 // forceRefresh is true when a related view is produce
                 // DB.Medias.HasChanged is true when a change has been applied on any Media
