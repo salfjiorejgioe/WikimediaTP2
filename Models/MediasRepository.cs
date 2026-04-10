@@ -32,6 +32,9 @@ namespace Models
             return Users;
         }
 
+
+
+
         public List<Media> GetUserMedias(int userId)
         {
             return ToList().Where(m => m.OwnerId == userId).ToList();

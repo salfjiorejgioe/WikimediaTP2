@@ -1,10 +1,10 @@
-﻿@{ 
+﻿@{
     ViewBag.PageTitle = "Wikimedia";
     string search = Session["Search"] != null ? ((bool)Session["Search"]).ToString() : false.ToString();
 }
 
 <div id="MediaListPanel" class="mediaListLayout">
-   
+
 </div>
 
 @section Scripts {
@@ -119,7 +119,7 @@
             function mediasListPostRefresh(fromRefresh = true) {
                 if (fromRefresh) {
                     categoriesSelectAutoRefreshPanel.refresh(true);
-                    usersSelectAutoRefreshPanel.refresh(true);
+                    //usersSelectAutoRefreshPanel.refresh(true);
                     $(".toggleLikeCmd").off();
                     $(".toggleLikeCmd").click(function (e) {
                         mediasListAutoRefreshPanel.command("/Medias/ToggleMediaLike/" + $(this).attr("mediaId"));

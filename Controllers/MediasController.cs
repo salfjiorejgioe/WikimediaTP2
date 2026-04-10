@@ -23,13 +23,13 @@ public class MediasController : Controller
         if (Session["Search"] == null) Session["Search"] = false;
         if (Session["SearchString"] == null) Session["SearchString"] = "";
         if (Session["SelectedCategory"] == null) Session["SelectedCategory"] = "";
-        if (Session["SelectedUser"] == null) Session["SelectedUser"] = "";
         if (Session["Categories"] == null) Session["Categories"] = DB.Medias.MediasCategories();
-        if (Session["Users"] == null) Session["Users"] = DB.Medias.MediasUsers();
         if (Session["SortByTitle"] == null) Session["SortByTitle"] = true;
         if (Session["MediaSortBy"] == null) Session["MediaSortBy"] = MediaSortBy.PublishDate;
         if (Session["MediaSortBy"] == null) Session["MediaSortBy"] = MediaSortBy.LikesCount;
         if (Session["SortAscending"] == null) Session["SortAscending"] = false;
+        if (Session["SelectedUserId"] == null) Session["SelectedUserId"] = 0;
+        if (Session["MediaOwners"] == null) Session["MediaOwners"] = DB.Medias.GetMediaOwners();
         ValidateSelectedCategory();
 
         // paging handling
@@ -54,21 +54,23 @@ public class MediasController : Controller
 
             bool search = (bool)Session["Search"];
             string searchString = (string)Session["SearchString"];
+            int selectedUserId = (int)Session["SelectedUserId"];
 
             if (Models.User.ConnectedUser.IsAdmin)
                 result = DB.Medias.ToList();
             else
                 result = DB.Medias.ToList().Where(c => c.Shared || Models.User.ConnectedUser.Id == c.OwnerId);
-
             if (search)
             {
                 result = result.Where(c => (c.Title.ToLower() + c.Description.ToLower()).Contains(searchString));
 
-                string SelectedCategory = (string)Session["SelectedCategory"];
-                if (SelectedCategory != "")
-                    result = result.Where(c => c.Category == SelectedCategory);
-            }
+                string selectedCategory = (string)Session["SelectedCategory"];
+                if (selectedCategory != "")
+                    result = result.Where(c => c.Category == selectedCategory);
 
+                if (selectedUserId != 0)
+                    result = result.Where(c => c.OwnerId == selectedUserId);
+            }
 
             if ((bool)Session["SortAscending"])
             {
@@ -164,6 +166,7 @@ public class MediasController : Controller
 
             bool search = (bool)Session["Search"];
 
+
             if (search)
             {
                 return PartialView();
@@ -175,7 +178,7 @@ public class MediasController : Controller
             return Content("Erreur interne" + ex.Message, "text/html");
         }
     }
-    public ActionResult GetMediasUsersList(bool forceRefresh = false)
+    public ActionResult GetMediasUsagersList(bool forceRefresh = false)
     {
         try
         {
@@ -206,7 +209,7 @@ public class MediasController : Controller
             Media media = DB.Medias.Get(mediaId);
 
             if (media == null)
-                return Content("Média introuvable");
+                return Content("MÃ©dia introuvable");
 
             return PartialView("GetMediaDetails", media);
         }
@@ -276,17 +279,20 @@ public class MediasController : Controller
         Session["SearchString"] = value.ToLower();
         return RedirectToAction("List");
     }
+    public ActionResult SetSearchUser(string value)
+    {
+        ResetMediasPaging();
 
+        int userId = 0;
+        int.TryParse(value, out userId);
+
+        Session["SelectedUserId"] = userId;
+        return RedirectToAction("List");
+    }
     public ActionResult SetSearchCategory(string value)
     {
         ResetMediasPaging();
         Session["SelectedCategory"] = value;
-        return RedirectToAction("List");
-    }
-    public ActionResult SetSearchUser(string value)
-    {
-        ResetMediasPaging();
-        Session["SelectedUser"] = value;
         return RedirectToAction("List");
     }
     public ActionResult About()
@@ -296,7 +302,7 @@ public class MediasController : Controller
 
     public ActionResult Details(int id)
     {
-        
+
         Session["CurrentMediaId"] = id;
         Media Media = DB.Medias.Get(id);
         Session["UserCanEditCurrentMedia"] = false;
@@ -376,7 +382,7 @@ public class MediasController : Controller
                     return View(Media);
             }
         }
-        return Redirect("/Accounts/Login?message=Accès illégal! &success=false");
+        return Redirect("/Accounts/Login?message=AccÃ¨s illÃ©gal! &success=false");
     }
 
     [UserAccess(Access.Write)]
@@ -424,10 +430,10 @@ public class MediasController : Controller
                     DB.Medias.Delete(id);
                     return RedirectToAction("List");
                 }
-                return Redirect("/Accounts/Login?message=Accès illégal! &success=false");
+                return Redirect("/Accounts/Login?message=AccÃ¨s illÃ©gal! &success=false");
             }
         }
-        return Redirect("/Accounts/Login?message=Accès illégal! &success=false");
+        return Redirect("/Accounts/Login?message=AccÃ¨s illÃ©gal! &success=false");
     }
 
     // This action is meant to be called by an AJAX request
@@ -442,6 +448,6 @@ public class MediasController : Controller
                     JsonRequestBehavior.AllowGet /* must have for CORS verification by client browser */);
     }
 
-    
+
 
 }
