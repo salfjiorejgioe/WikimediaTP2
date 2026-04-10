@@ -280,21 +280,27 @@ public class MediasController : Controller
         return RedirectToAction("List");
     }
     // dawg why does it kicks me when I like a media while connected as an admin without this line ?!?
-    public ActionResult ToggleMediaLike(int mediaId)
+    public ActionResult ToggleMediaLike(int id)
     {
         int userId = Models.User.ConnectedUser.Id;
 
-        Like like = DB.Likes.GetMediaLikes(mediaId)
-            .FirstOrDefault(l => l.UserId == userId);
+        Like like = DB.Likes.GetUserMediaLike(userId, id);
 
         if (like != null)
+        {
             DB.Likes.Delete(like.Id);
+        }
         else
-            DB.Likes.Add(new Like { MediaId = mediaId, UserId = userId, OwnerId=userId});
+        {
+            DB.Likes.Add(new Like
+            {
+                MediaId = id,
+                UserId = userId,
+                OwnerId = userId
+            });
+        }
 
-        int likeCount = DB.Likes.GetMediaLikes(mediaId).Count();
-
-        return Json(new { success = true, likes = likeCount }, JsonRequestBehavior.AllowGet);  // dawg what xd
+        return null;
     }
     [UserAccess(Access.Write)]
     public ActionResult Create()

@@ -47,7 +47,7 @@
         currentMedia = DAL.DB.Medias.Get(currentMediaId);
     }
 
-    int currentMediaLikes = currentMedia != null ? currentMedia.Likes : 0;
+    int currentMediaLikes = currentMedia != null ? currentMedia.LikesCount : 0;
     bool currentMediaIsLikedByCurrentUser = false;
     if (currentMedia != null && Models.User.ConnectedUser != null)
     {
