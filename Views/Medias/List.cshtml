@@ -12,6 +12,7 @@
 
         let mediasListAutoRefreshPanel = null;
         let categoriesSelectAutoRefreshPanel = null;
+        let usersSelectAutoRefreshPanel = null;
         let loadMoreTriggerMargin = 10;
         let pauseScrollEvent = false;
 
@@ -32,6 +33,12 @@
                     "/Medias/GetMediasCategoriesList",
                     -1 /* manually refreshed */,
                     categoriesSelectPostRefresh);
+            usersSelectAutoRefreshPanel =
+                new AutoRefreshedPanel(
+                    "categorySelectPanel",
+                    "/Medias/GetMediasUsersList",
+                    -1 /* manually refreshed */,
+                    usersSelectPostRefresh);
 
             let keywordsOnchangeTimer = null;
             let resizeTimer = null;
@@ -112,6 +119,7 @@
             function mediasListPostRefresh(fromRefresh = true) {
                 if (fromRefresh) {
                     categoriesSelectAutoRefreshPanel.refresh(true);
+                    usersSelectAutoRefreshPanel.refresh(true);
                     $(".toggleLikeCmd").off();
                     $(".toggleLikeCmd").click(function (e) {
                         mediasListAutoRefreshPanel.command("/Medias/ToggleMediaLike/" + $(this).attr("mediaId"));
@@ -157,6 +165,19 @@
                 });
                 $("#categorySelect").on('change', function () {
                     window.location = "/Medias/SetSearchCategory?value=" + $("#categorySelect").val();
+                });
+            }
+            function userSelectPostRefresh() {
+
+                $("#userSelect").off();
+                $("#userSelect").on("focus", function () {
+                    mediasListAutoRefreshPanel.pause();
+                });
+                $("#userSelect").on("blur", function () {
+                    mediasListAutoRefreshPanel.restart();
+                });
+                $("#userSelect").on('change', function () {
+                    window.location = "/Medias/SetSearchUser?value=" + $("#userSelect").val();
                 });
             }
         })

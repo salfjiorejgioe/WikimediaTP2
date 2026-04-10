@@ -23,7 +23,9 @@ public class MediasController : Controller
         if (Session["Search"] == null) Session["Search"] = false;
         if (Session["SearchString"] == null) Session["SearchString"] = "";
         if (Session["SelectedCategory"] == null) Session["SelectedCategory"] = "";
+        if (Session["SelectedUser"] == null) Session["SelectedUser"] = "";
         if (Session["Categories"] == null) Session["Categories"] = DB.Medias.MediasCategories();
+        if (Session["Users"] == null) Session["Users"] = DB.Medias.MediasUsers();
         if (Session["SortByTitle"] == null) Session["SortByTitle"] = true;
         if (Session["MediaSortBy"] == null) Session["MediaSortBy"] = MediaSortBy.PublishDate;
         if (Session["MediaSortBy"] == null) Session["MediaSortBy"] = MediaSortBy.LikesCount;
@@ -173,7 +175,7 @@ public class MediasController : Controller
             return Content("Erreur interne" + ex.Message, "text/html");
         }
     }
-    public ActionResult GetMediasUsagersList(bool forceRefresh = false)
+    public ActionResult GetMediasUsersList(bool forceRefresh = false)
     {
         try
         {
@@ -279,6 +281,12 @@ public class MediasController : Controller
     {
         ResetMediasPaging();
         Session["SelectedCategory"] = value;
+        return RedirectToAction("List");
+    }
+    public ActionResult SetSearchUser(string value)
+    {
+        ResetMediasPaging();
+        Session["SelectedUser"] = value;
         return RedirectToAction("List");
     }
     public ActionResult About()
