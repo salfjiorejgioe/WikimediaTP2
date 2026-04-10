@@ -112,10 +112,9 @@
             function mediasListPostRefresh(fromRefresh = true) {
                 if (fromRefresh) {
                     categoriesSelectAutoRefreshPanel.refresh(true);
-<<<<<<< HEAD
+
                     //usersSelectAutoRefreshPanel.refresh(true);
-=======
->>>>>>> parent of 315f278 (HELPP)
+
                     $(".toggleLikeCmd").off();
                     $(".toggleLikeCmd").click(function (e) {
                         mediasListAutoRefreshPanel.command("/Medias/ToggleMediaLike/" + $(this).attr("mediaId"));
