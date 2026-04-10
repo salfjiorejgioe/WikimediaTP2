@@ -39,6 +39,13 @@ namespace Models
         {
             return ToList().Where(m => m.OwnerId == userId).ToList();
         }
+        public List<User> GetMediaOwners()
+        {
+            List<int> ownerIds = ToList().Select(m => m.OwnerId).Distinct().ToList();
+
+            return ownerIds
+                .Select(id => DB.Users.Get(id)).Where(u => u != null).OrderBy(u => u.Name).ToList();
+        }
 
         public void DeleteUserMedias(int userId)
         {
