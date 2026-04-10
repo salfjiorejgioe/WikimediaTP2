@@ -1,0 +1,13 @@
+@{
+    List<string> users = DAL.DB.Medias.MediasCategories();
+    string selectedUser = (string)Session["SelectedUser"];
+}
+
+<select id="usagerSelect" class="form-control">
+    <option value="" selected>Touts les usagers</option>
+    @foreach (var user in users)
+    {
+        string selected = selectedUser == user ? "selected" : "";
+        <option value="@user" @selected>@user</option>
+    }
+</select>

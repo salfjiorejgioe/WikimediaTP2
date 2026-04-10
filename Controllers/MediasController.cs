@@ -26,6 +26,7 @@ public class MediasController : Controller
         if (Session["Categories"] == null) Session["Categories"] = DB.Medias.MediasCategories();
         if (Session["SortByTitle"] == null) Session["SortByTitle"] = true;
         if (Session["MediaSortBy"] == null) Session["MediaSortBy"] = MediaSortBy.PublishDate;
+        if (Session["MediaSortBy"] == null) Session["MediaSortBy"] = MediaSortBy.LikesCount;
         if (Session["SortAscending"] == null) Session["SortAscending"] = false;
         ValidateSelectedCategory();
 
@@ -75,6 +76,8 @@ public class MediasController : Controller
                         result = result.OrderBy(c => c.Title); break;
                     case MediaSortBy.PublishDate:
                         result = result.OrderBy(c => c.PublishDate); break;
+                    case MediaSortBy.LikesCount:
+                        result = result.OrderBy(c => c.LikesCount); break;
                 }
             }
             else
@@ -85,6 +88,8 @@ public class MediasController : Controller
                         result = result.OrderByDescending(c => c.Title); break;
                     case MediaSortBy.PublishDate:
                         result = result.OrderByDescending(c => c.PublishDate); break;
+                    case MediaSortBy.LikesCount:
+                        result = result.OrderByDescending(c => c.LikesCount); break;
                 }
             }
             if (result.Count() < nbItems + index)
