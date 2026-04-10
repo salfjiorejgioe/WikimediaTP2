@@ -148,6 +148,7 @@
 
             function categoriesSelectPostRefresh() {
 
+          
                 $("#categorySelect").off();
                 $("#categorySelect").on("focus", function () {
                     mediasListAutoRefreshPanel.pause();
@@ -157,6 +158,18 @@
                 });
                 $("#categorySelect").on('change', function () {
                     window.location = "/Medias/SetSearchCategory?value=" + $("#categorySelect").val();
+                });
+
+               
+                $("#userSelect").off();
+                $("#userSelect").on("focus", function () {
+                    mediasListAutoRefreshPanel.pause();
+                });
+                $("#userSelect").on("blur", function () {
+                    mediasListAutoRefreshPanel.restart();
+                });
+                $("#userSelect").on("change", function () {
+                    window.location = "/Medias/SetSearchUser?value=" + $("#userSelect").val();
                 });
             }
         })

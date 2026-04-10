@@ -28,6 +28,8 @@ public class MediasController : Controller
         if (Session["MediaSortBy"] == null) Session["MediaSortBy"] = MediaSortBy.PublishDate;
         if (Session["MediaSortBy"] == null) Session["MediaSortBy"] = MediaSortBy.LikesCount;
         if (Session["SortAscending"] == null) Session["SortAscending"] = false;
+        if (Session["SelectedUserId"] == null) Session["SelectedUserId"] = 0;
+        if (Session["MediaOwners"] == null) Session["MediaOwners"] = DB.Medias.GetMediaOwners();
         ValidateSelectedCategory();
 
         // paging handling
@@ -52,21 +54,23 @@ public class MediasController : Controller
 
             bool search = (bool)Session["Search"];
             string searchString = (string)Session["SearchString"];
+            int selectedUserId = (int)Session["SelectedUserId"];
 
             if (Models.User.ConnectedUser.IsAdmin)
                 result = DB.Medias.ToList();
             else
                 result = DB.Medias.ToList().Where(c => c.Shared || Models.User.ConnectedUser.Id == c.OwnerId);
-
             if (search)
             {
                 result = result.Where(c => (c.Title.ToLower() + c.Description.ToLower()).Contains(searchString));
 
-                string SelectedCategory = (string)Session["SelectedCategory"];
-                if (SelectedCategory != "")
-                    result = result.Where(c => c.Category == SelectedCategory);
-            }
+                string selectedCategory = (string)Session["SelectedCategory"];
+                if (selectedCategory != "")
+                    result = result.Where(c => c.Category == selectedCategory);
 
+                if (selectedUserId != 0)
+                    result = result.Where(c => c.OwnerId == selectedUserId);
+            }
 
             if ((bool)Session["SortAscending"])
             {
@@ -161,6 +165,7 @@ public class MediasController : Controller
             InitSessionVariables();
 
             bool search = (bool)Session["Search"];
+
 
             if (search)
             {
@@ -274,7 +279,16 @@ public class MediasController : Controller
         Session["SearchString"] = value.ToLower();
         return RedirectToAction("List");
     }
+    public ActionResult SetSearchUser(string value)
+    {
+        ResetMediasPaging();
 
+        int userId = 0;
+        int.TryParse(value, out userId);
+
+        Session["SelectedUserId"] = userId;
+        return RedirectToAction("List");
+    }
     public ActionResult SetSearchCategory(string value)
     {
         ResetMediasPaging();
