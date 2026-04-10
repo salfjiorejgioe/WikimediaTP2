@@ -2,7 +2,8 @@
     List<string> categories = DAL.DB.Medias.MediasCategories();
     string selectedCategory = (string)Session["SelectedCategory"];
 
-    List<Models.User> mediaOwners = Session["MediaOwners"] as List<Models.User>;
+    //List<Models.User> mediaOwners = Session["MediaOwners"] as List<Models.User>; 
+    List<Models.User> mediaOwners = DAL.DB.Medias.GetMediaOwners();
     int selectedUserId = Session["SelectedUserId"] != null ? (int)Session["SelectedUserId"] : 0;
 }
 
