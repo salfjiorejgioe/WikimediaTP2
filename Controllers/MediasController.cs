@@ -31,6 +31,7 @@ public class MediasController : Controller
         if (Session["MediaSortBy"] == null) Session["MediaSortBy"] = MediaSortBy.LikesCount;
         if (Session["SortAscending"] == null) Session["SortAscending"] = false;
         ValidateSelectedCategory();
+        ValidateSelectedUser();
 
         // paging handling
         if (Session["pageNum"] == null) Session["pageNum"] = 1;
@@ -153,6 +154,16 @@ public class MediasController : Controller
             var Medias = DB.Medias.ToList().Where(c => c.Category == selectedCategory);
             if (Medias.Count() == 0)
                 Session["SelectedCategory"] = "";
+        }
+    }
+    private void ValidateSelectedUser()
+    {
+        if (Session["SelectedUser"] != null)
+        {
+            var selectedUser = (string)Session["SelectedUser"];
+            var Medias = DB.Medias.ToList().Where(c => c.Owner.Name == selectedUser);
+            if (Medias.Count() == 0)
+                Session["SelectedUser"] = "";
         }
     }
 
