@@ -177,16 +177,16 @@ public class MediasController : Controller
             InitSessionVariables();
 
             int mediaId = (int)Session["CurrentMediaId"];
-            Media Media = DB.Medias.Get(mediaId);
-            if (DB.Users.HasChanged || DB.Medias.HasChanged || forceRefresh)
-            {
-                return PartialView(Media);
-            }
-            return null;
+            Media media = DB.Medias.Get(mediaId);
+
+            if (media == null)
+                return Content("Média introuvable");
+
+            return PartialView("GetMediaDetails", media);
         }
         catch (System.Exception ex)
         {
-            return Content("Erreur interne" + ex.Message, "text/html");
+            return Content("Erreur interne : " + ex.Message, "text/html");
         }
     }
     public ActionResult GetMedias(bool forceRefresh = false)

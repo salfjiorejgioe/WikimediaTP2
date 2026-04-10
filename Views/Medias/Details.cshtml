@@ -11,15 +11,30 @@
 
 @section Scripts {
     <script>
+        let mediaDetails_ARP = null;
+
         $(() => {
             newSession(600);
-            setCurrentPageLimit()
             mediaDetails_ARP = new AutoRefreshedPanel("detailsPanel", "/Medias/GetMediaDetails", 5, mediaDetailsPostRefresh);
+            mediaDetails_ARP.refresh(true);
             sessionStorage.setItem("RestoreScrollPosition", "1");
-        })
+        });
 
         function mediaDetailsPostRefresh() {
-            // todo
+            $(".toggleLikeCmd").off("click");
+            $(".toggleLikeCmd").on("click", function (e) {
+                e.preventDefault();
+
+                let mediaId = $(this).attr("mediaId");
+
+                $.ajax({
+                    url: "/Medias/ToggleMediaLike/" + mediaId,
+                    success: function () {
+                        mediaDetails_ARP.refresh(true);
+                    }
+                });
+            });
+
             highlightKeyword();
         }
 
@@ -27,14 +42,15 @@
             if ("@search" == "True") {
                 let keyword = "@SearchString";
                 if (keyword.length > 0) {
-                     let titles = document.getElementsByClassName('mediaTitle');
-                     Array.from(titles).forEach(title => {
-                         highlight(keyword, title);
-                     });
-                     let descriptions = document.getElementsByClassName('mediaDescription');
-                     Array.from(descriptions).forEach(description => {
-                         highlight(keyword, description);
-                     })
+                    let titles = document.getElementsByClassName('mediaTitle');
+                    Array.from(titles).forEach(title => {
+                        highlight(keyword, title);
+                    });
+
+                    let descriptions = document.getElementsByClassName('mediaDescription');
+                    Array.from(descriptions).forEach(description => {
+                        highlight(keyword, description);
+                    });
                 }
             }
         }
