@@ -1,6 +1,6 @@
 [
   {
-    "Name": "ModÃ©rateur",
+    "Name": "Modérateur",
     "Email": "admin@app.net",
     "Password": "O2GYEtzXFrz+F+HNH/YxPihWIGTFLTvYad215JO7b5M=iI76Y3k2BYenrpKy+4zPuqUxVss=",
     "Access": 3,
@@ -53,5 +53,38 @@
     "Notify": true,
     "Avatar": "/App_Assets/Users/no_avatar.png",
     "Id": 5
+  },
+  {
+    "Name": "peenaarsnipperguy",
+    "Email": "peenaarsnipperguy@yopmail.com",
+    "Password": "1CmGo/RQaeR2MKloOpqcnJSLNE9TzvISbUMRLJ5+Wt0=w2yNTBk0STqlZRDI8vtsSbUfgjA=", //peenaarsnipperguy
+    "Access": 2,
+    "Blocked": false,
+    "Verified": true,
+    "Notify": true,
+    "Avatar": "/App_Assets/Users/no_avatar.png",
+    "Id": 6
+  },
+  {
+    "Name": "dih",
+    "Email": "dih@yopmail.com",
+    "Password": "SxaQDrTuDStAwLxqk35XyJFyxXtEqguz1tarX8KyPIA=F1rHM8HGFAlc9OydIsbTTLW9aps=", //peenaar
+    "Access": 2,
+    "Blocked": false,
+    "Verified": true,
+    "Notify": true,
+    "Avatar": "/App_Assets/Users/no_avatar.png",
+    "Id": 7
+  },
+  {
+    "Name": "James",
+    "Email": "james@yopmail.com",
+    "Password": "O2GYEtzXFrz+F+HNH/YxPihWIGTFLTvYad215JO7b5M=iI76Y3k2BYenrpKy+4zPuqUxVss=", //password
+    "Access": 2,
+    "Blocked": false,
+    "Verified": true,
+    "Notify": true,
+    "Avatar": "/App_Assets/Users/no_avatar.png",
+    "Id": 8
   }
 ]
