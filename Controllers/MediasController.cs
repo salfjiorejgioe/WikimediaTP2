@@ -286,7 +286,7 @@ public class MediasController : Controller
         if (like != null)
             DB.Likes.Delete(like.Id);
         else
-            DB.Likes.Add(new Like { MediaId = mediaId, UserId = userId});
+            DB.Likes.Add(new Like { MediaId = mediaId, UserId = userId, OwnerId=userId});
 
         int likeCount = DB.Likes.GetMediaLikes(mediaId).Count();
 
