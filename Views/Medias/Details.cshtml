@@ -30,7 +30,7 @@
                 $.ajax({
                     url: "/Medias/ToggleMediaLike/" + mediaId,
                     success: function () {
-                        mediaDetails_ARP.refresh(true);
+                        location.reload();
                     }
                 });
             });
