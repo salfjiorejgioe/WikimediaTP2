@@ -264,6 +264,7 @@ public class MediasController : Controller
 
     public ActionResult Details(int id)
     {
+        
         Session["CurrentMediaId"] = id;
         Media Media = DB.Medias.Get(id);
         Session["UserCanEditCurrentMedia"] = false;
@@ -271,6 +272,9 @@ public class MediasController : Controller
         {
             Session["CurrentMediaTitle"] = Media.Title;
             Session["UserCanEditCurrentMedia"] = Media.OwnerId == Models.User.ConnectedUser.Id || Models.User.ConnectedUser.IsAdmin;
+
+            ViewBag.CurrentMedia = Media;
+            Session["CurrentMedia"] = Media;
             return View(Media);
         }
         return RedirectToAction("List");
