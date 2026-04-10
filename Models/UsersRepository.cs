@@ -48,7 +48,7 @@ namespace Models
                 return user.Copy();
             return null;
         }
-        
+
         public override int Add(User user)
         {
             user.Password = HashPassword(user.Password);
@@ -75,14 +75,18 @@ namespace Models
                 if (userToDelete != null)
                 {
                     BeginTransaction();
+
                     userToDelete.DeleteLogins();
-                    /* 
-                     * TODO : Delete user other related data
-                     */
+
+                    DB.Likes.DeleteUserLikes(userId);
+                    DB.Medias.DeleteUserMedias(userId);
+
                     base.Delete(userId);
+
                     EndTransaction();
                     return true;
                 }
+
                 return false;
             }
             catch (Exception ex)
@@ -92,5 +96,6 @@ namespace Models
                 return false;
             }
         }
+
     }
 }
