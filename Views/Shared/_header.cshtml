@@ -5,6 +5,10 @@
     string searchString = Session["SearchString"] != null ? (string)Session["SearchString"] : "";
     int currentMediaId = Session["CurrentMediaId"] != null ? (int)Session["CurrentMediaId"] : 0;
     string currentMediaTitle = Session["currentMediaTitle"] != null ? (string)Session["currentMediaTitle"] : "";
+
+
+
+
     string selectedCategory = Session["CurrentSelectedCategory"] != null ? (string)Session["CurrentSelectedCategory"] : "";
 
     var Categories = (List<string>)Session["Categories"];
@@ -29,6 +33,27 @@
     bool userIsAdmin = userConnected ? Models.User.ConnectedUser.IsAdmin : false;
     bool userCanWrite = userConnected ? Models.User.ConnectedUser.CanWrite : false;
 
+    Models.Media currentMedia = null;
+    if (ViewBag.CurrentMedia != null)
+    {
+        currentMedia = ViewBag.CurrentMedia as Models.Media;
+    }
+    else if (Session["CurrentMedia"] != null)
+    {
+        currentMedia = Session["CurrentMedia"] as Models.Media;
+    }
+    else if (currentMediaId != 0)
+    {
+        currentMedia = DAL.DB.Medias.Get(currentMediaId);
+    }
+
+    int currentMediaLikes = currentMedia != null ? currentMedia.Likes : 0;
+    bool currentMediaIsLikedByCurrentUser = false;
+    if (currentMedia != null && Models.User.ConnectedUser != null)
+    {
+        currentMediaIsLikedByCurrentUser = DAL.DB.Likes.GetMediaLikes(currentMedia.Id).Any(l => l.UserId == Models.User.ConnectedUser.Id);
+    }
+
     string index = RouteConfig.DefaultAction();
 }
 
@@ -39,6 +64,8 @@
         <!-- Direct action context command icons -->
         @switch (action)
         {
+
+
             case "login": break;
             case "subscribe":
                 <div id="mainMenuPanel" class="menu">
@@ -135,48 +162,58 @@
                     </div>
                 </div>
                 break;
-            case "details":
+            
+                case "details":
                 <div id="mainMenuPanel" class="menu">
                     @if ((bool)Session["UserCanEditCurrentMedia"] && userCanWrite)
                     {
-                        <a href="/@controller/Edit" class="cmdIcon fa fa-pen-to-square" title="Modifier..."></a>
-                        <i class="cmdIcon fa fa-trash-can"
-                           title="Effacer"
-                           onclick="bootbox.confirm(`<b style=color:red>Effacer le Media : </b><h3>@currentMediaTitle?</h3>`, function(result){ if (result) window.location = '/@controller/Delete'; })">
-                        </i>
+                    <a href="/@controller/Edit" class="cmdIcon fa fa-pen-to-square" title="Modifier..."></a>
+                    <i class="cmdIcon fa fa-trash-can"
+                       title="Effacer"
+                       onclick="bootbox.confirm(`<b style=color:red>Effacer le Media : </b><h3>@currentMediaTitle?</h3>`, function(result){ if (result) window.location = '/@controller/Delete'; })">
+                    </i>
                     }
+                    
+                <div id="likesPanel">
+
+                    <div style="display:grid; grid-template-columns:auto 20px;align-items:last baseline;margin-right:8px;">
+                        <span class="cmdIcon" style="font-size:1.1em" title="Usagers qui ont aimé : "> @currentMediaLikes </span>
+                        <i class="cmdIconSmall @(currentMediaIsLikedByCurrentUser ? "fa-solid" : "fa-regular") fa-thumbs-up toggleLikeCmd" mediaid="@currentMediaId"></i>
+                    </div>
+                </div>
+
                     <a href="/@controller/List" class="cmdIcon fa fa-square-xmark" title="retour"></a>
                 </div>
                 break;
-            case "create":
+                case "create":
                 if (userCanWrite)
                 {
-                    <div id="mainMenuPanel" class="menu">
-                        <i class="cmdIcon submitCmd fa fa-circle-check" title="Soumettre" onclick="document.getElementById('submit').click()"></i>
-                        <a href="/@controller/List" class="cmdIcon fa fa-square-xmark" title="Annuler"></a>
-                    </div>
+                <div id="mainMenuPanel" class="menu">
+                    <i class="cmdIcon submitCmd fa fa-circle-check" title="Soumettre" onclick="document.getElementById('submit').click()"></i>
+                    <a href="/@controller/List" class="cmdIcon fa fa-square-xmark" title="Annuler"></a>
+                </div>
                 }
                 break;
-            case "edit":
+                case "edit":
                 if (userCanWrite)
                 {
-                    <div id="mainMenuPanel" class="menu">
-                        <i class="cmdIcon submitCmd fa fa-circle-check" title="Soumettre" onclick="document.getElementById('submit').click()"></i>
-                        <a href="/@controller/Details/@currentMediaId" class="cmdIcon fa fa-square-xmark" title="Annuler"></a>
-                    </div>
+                <div id="mainMenuPanel" class="menu">
+                    <i class="cmdIcon submitCmd fa fa-circle-check" title="Soumettre" onclick="document.getElementById('submit').click()"></i>
+                    <a href="/@controller/Details/@currentMediaId" class="cmdIcon fa fa-square-xmark" title="Annuler"></a>
+                </div>
                 }
                 break;
-            case "loginsjournal":
-            case "eventsjournal":
-            case "manageusers":
-            case "about":
+                case "loginsjournal":
+                case "eventsjournal":
+                case "manageusers":
+                case "about":
                 <div id="mainMenuPanel" class="menu">
                     <a href="@index" class="cmdIcon fa fa-square-xmark" title="Retour"></a>
                 </div>
                 break;
-        }
+                }
 
-    </div>
+            </div>
 </div>
 @if (search && controller == "medias" && action == "list")
 {
