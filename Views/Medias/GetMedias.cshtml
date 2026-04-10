@@ -31,8 +31,10 @@
 
                     <div style="display: flex; justify-content: flex-end; gap: 5px; align-items: center; padding-right: 4px; cursor: pointer; color: dodgerblue">
 
-                        <span title="Usagers qui ont aimé :">0 </span>
-                        <i class="cmdIconSmall fa-regular fa-thumbs-up toggleLikeCmd" mediaid="@media.Id"></i>
+                        <span title="Usagers qui ont aimé :@string.Join(", ", media.LikedUsers.Select(u => u.Name))"> @media.Likes </span>
+
+
+                        <i class="cmdIconSmall @(media.IsLikedByCurrentUser ? "fa-solid" : "fa-regular") fa-thumbs-up toggleLikeCmd" mediaid="@media.Id"></i>
 
                     </div>
 

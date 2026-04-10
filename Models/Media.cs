@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using WebApplication.Models;
 
 namespace Models
 {
-    public enum MediaSortBy { Title, PublishDate }
+    public enum MediaSortBy { Title, PublishDate, Likes }
 
     public class Media : Record
     {
@@ -21,6 +22,19 @@ namespace Models
         public bool Shared { get; set; } = true;
         [JsonIgnore]
         public User Owner => DB.Users.Get(OwnerId).Copy();
+
+
+        [JsonIgnore]
+        public List<Like> MediaLikes => DB.Likes.GetMediaLikes(Id);
+
+        [JsonIgnore]
+        public int Likes => MediaLikes.Count;
+
+        [JsonIgnore]
+        public List<User> LikedUsers => MediaLikes.Select(l => DB.Users.Get(l.UserId).Copy()).ToList();
+
+        [JsonIgnore]
+        public bool IsLikedByCurrentUser => MediaLikes.Any(l => l.UserId == Models.User.ConnectedUser.Id);
 
         public override bool IsValid()
         {

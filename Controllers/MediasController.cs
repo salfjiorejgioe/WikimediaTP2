@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
+using WebApplication.Models;
 using static Controllers.AccessControl;
 
 [UserAccess(Access.View)]
@@ -274,6 +275,23 @@ public class MediasController : Controller
         }
         return RedirectToAction("List");
     }
+    // dawg why does it kicks me when I like a media while connected as an admin without this line ?!?
+    public ActionResult ToggleMediaLike(int mediaId)
+    {
+        int userId = Models.User.ConnectedUser.Id;
+
+        var like = DB.Likes.GetMediaLikes(mediaId)
+            .FirstOrDefault(l => l.UserId == userId);
+
+        if (like != null)
+            DB.Likes.Delete(like.Id);
+        else
+            DB.Likes.Add(new Like { MediaId = mediaId, UserId = userId });
+
+        int likeCount = DB.Likes.GetMediaLikes(mediaId).Count();
+
+        return Json(new { success = true, likes = likeCount }, JsonRequestBehavior.AllowGet);  // dawg what
+    }
     [UserAccess(Access.Write)]
     public ActionResult Create()
     {
@@ -381,5 +399,7 @@ public class MediasController : Controller
         return Json(DB.Medias.ToList().Where(c => c.YoutubeId == YoutubeId && c.Id != id).Any(),
                     JsonRequestBehavior.AllowGet /* must have for CORS verification by client browser */);
     }
+
+    
 
 }
