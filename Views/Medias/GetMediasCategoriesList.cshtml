@@ -6,25 +6,26 @@
     int selectedUserId = Session["SelectedUserId"] != null ? (int)Session["SelectedUserId"] : 0;
 }
 
-
-<select id="categorySelect" class="form-control">
-    <option value="">Toutes les catégories</option>
-    @foreach (var category in categories)
-    {
-        string selected = selectedCategory == category ? "selected" : "";
-        <option value="@category" @selected>@category</option>
-    }
-</select>
-
-<select id="userSelect" class="form-control" style="margin-top:5px;">
-    <option value="0">Tous les usagers</option>
-
-    @if (mediaOwners != null)
-    {
-        foreach (var user in mediaOwners)
+<div style="display:flex;gap:10px">
+    <select id="categorySelect" class="form-control">
+        <option value="">Toutes les catégories</option>
+        @foreach (var category in categories)
         {
-            string selected = user.Id == selectedUserId ? "selected" : "";
-            <option value="@user.Id" @selected>@user.Name</option>
+            string selected = selectedCategory == category ? "selected" : "";
+            <option value="@category" @selected>@category</option>
         }
-    }
-</select>
+    </select>
+
+    <select id="userSelect" class="form-control" style="margin-top:5px;">
+        <option value="0">Tous les usagers</option>
+
+        @if (mediaOwners != null)
+        {
+            foreach (var user in mediaOwners)
+            {
+                string selected = user.Id == selectedUserId ? "selected" : "";
+                <option value="@user.Id" @selected>@user.Name</option>
+            }
+        }
+    </select>
+</div>
