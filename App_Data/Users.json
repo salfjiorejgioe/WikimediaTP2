@@ -80,7 +80,7 @@
     "Name": "James",
     "Email": "james@yopmail.com",
     "Password": "O2GYEtzXFrz+F+HNH/YxPihWIGTFLTvYad215JO7b5M=iI76Y3k2BYenrpKy+4zPuqUxVss=", //password
-    "Access": 2,
+    "Access": 1,
     "Blocked": false,
     "Verified": true,
     "Notify": true,
