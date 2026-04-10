@@ -31,16 +31,34 @@
 
                     <div style="display: flex; justify-content: flex-end; gap: 5px; align-items: center; padding-right: 4px; cursor: pointer; color: dodgerblue">
 
-                        <span title="Usagers qui ont aimé :@string.Join(", ", media.LikedUsers.Select(u => u.Name))"> @media.Likes </span>
+                        <span title="Usagers qui ont aimé :@media.LikedUsersNames"> @media.LikesCount </span>
 
 
-                        <i class="cmdIconSmall @(media.IsLikedByCurrentUser ? "fa-solid" : "fa-regular") fa-thumbs-up toggleLikeCmd" mediaid="@media.Id"></i>
+                        <i class="cmdIconSmall @(media.IsLikedByCurrentUser ? "fa-solid" : "fa-regular") fa-thumbs-up toggleLikeCmd"
+                           mediaId="@media.Id"
+                           title="@(media.IsLikedByCurrentUser ? "Retirer j’aime" : "Ajouter j’aime")"
+                           style="cursor:pointer">
+                        </i>
 
                     </div>
 
 
                 </div>
             </div>
+            <script>
+                $(document).on("click", ".toggleLikeCmd", function () {
+                    let mediaId = $(this).attr("mediaid");
+
+                    $.ajax({
+                        url: "/Medias/ToggleMediaLike",
+                        type: "GET",
+                        data: { mediaId: mediaId },
+                        success: function () {
+                            $("#mediasContainer").load("/Medias/GetMedias?forceRefresh=true");
+                        }
+                    });
+                });
+            </script>
         }
     }
 }

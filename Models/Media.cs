@@ -25,16 +25,26 @@ namespace Models
 
 
         [JsonIgnore]
-        public List<Like> MediaLikes => DB.Likes.GetMediaLikes(Id);
+        public List<Like> Likes { get { return DB.Likes.ToList().Where(l => l.MediaId == Id).ToList(); } }
+
 
         [JsonIgnore]
-        public int Likes => MediaLikes.Count;
+        public int LikesCount { get { return Likes.Count(); } }
 
         [JsonIgnore]
-        public List<User> LikedUsers => MediaLikes.Select(l => DB.Users.Get(l.UserId).Copy()).ToList();
+        public List<User> LikedUsers => Likes.Select(l => DB.Users.Get(l.UserId).Copy()).ToList();
 
         [JsonIgnore]
-        public bool IsLikedByCurrentUser => MediaLikes.Any(l => l.UserId == Models.User.ConnectedUser.Id);
+        public bool IsLikedByCurrentUser => Likes.Any(l => l.UserId == Models.User.ConnectedUser.Id);
+        public string LikedUsersNames
+        {
+            get
+            {
+                var users = Likes.Select(l => DB.Users.Get(l.UserId)).
+                    Where(u => u != null).Select(u => u.Name);
+                return string.Join(",", users);
+            }
+        }
 
         public override bool IsValid()
         {

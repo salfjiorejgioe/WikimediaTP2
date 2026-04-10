@@ -20,7 +20,7 @@ namespace DAL
         
         static public UsersRepository Users { get; set; }
             = new UsersRepository();
-        public static LikesRepository Likes { get; set; } = new LikesRepository();
+
 
         static public NotificationsRepository Notifications { get; set; }
             = new NotificationsRepository();
@@ -36,5 +36,8 @@ namespace DAL
 
         static public Repository<RenewPasswordCommand> RenewPasswordCommands { get; set; }
             = new Repository<RenewPasswordCommand>();
+
+        static public LikesRepository Likes { get; set; }
+          = new LikesRepository();
     }
 }

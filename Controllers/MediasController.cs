@@ -280,17 +280,17 @@ public class MediasController : Controller
     {
         int userId = Models.User.ConnectedUser.Id;
 
-        var like = DB.Likes.GetMediaLikes(mediaId)
+        Like like = DB.Likes.GetMediaLikes(mediaId)
             .FirstOrDefault(l => l.UserId == userId);
 
         if (like != null)
             DB.Likes.Delete(like.Id);
         else
-            DB.Likes.Add(new Like { MediaId = mediaId, UserId = userId });
+            DB.Likes.Add(new Like { MediaId = mediaId, UserId = userId});
 
         int likeCount = DB.Likes.GetMediaLikes(mediaId).Count();
 
-        return Json(new { success = true, likes = likeCount }, JsonRequestBehavior.AllowGet);  // dawg what
+        return Json(new { success = true, likes = likeCount }, JsonRequestBehavior.AllowGet);  // dawg what xd
     }
     [UserAccess(Access.Write)]
     public ActionResult Create()
