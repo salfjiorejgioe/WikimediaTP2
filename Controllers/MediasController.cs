@@ -173,6 +173,25 @@ public class MediasController : Controller
             return Content("Erreur interne" + ex.Message, "text/html");
         }
     }
+    public ActionResult GetMediasUsagersList(bool forceRefresh = false)
+    {
+        try
+        {
+            InitSessionVariables();
+
+            bool search = (bool)Session["Search"];
+
+            if (search)
+            {
+                return PartialView();
+            }
+            return null;
+        }
+        catch (System.Exception ex)
+        {
+            return Content("Erreur interne" + ex.Message, "text/html");
+        }
+    }
     // This action produce a partial view of Medias
     // It is meant to be called by an AJAX request (from client script)
     public ActionResult GetMediaDetails(bool forceRefresh = false)

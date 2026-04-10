@@ -18,5 +18,17 @@ namespace Models
             }
             return Categories;
         }
+        public List<string> MediasUsers()
+        {
+            List<string> Users = new List<string>();
+            foreach (Media media in ToList().OrderBy(m => m.Owner.Name))
+            {
+                if (Users.IndexOf(media.Owner.Name) == -1)
+                {
+                    Users.Add(media.Owner.Name);
+                }
+            }
+            return Users;
+        }
     }
 }
