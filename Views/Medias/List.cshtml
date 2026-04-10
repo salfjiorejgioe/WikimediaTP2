@@ -4,7 +4,7 @@
 }
 
 <div id="MediaListPanel" class="mediaListLayout">
-    <!-- Periodicaly refreshed by object contactListPanel of class AutoRefreshedPanel -->
+   
 </div>
 
 @section Scripts {
@@ -17,7 +17,7 @@
 
         $(() => {
             newSession(600);
-            //setCurrentPageLimit();
+            setCurrentPageLimit();
 
             mediasListAutoRefreshPanel =
                 new AutoRefreshedPanel(
@@ -54,15 +54,24 @@
                 let nbRows = 4; // default value that will change with windows.resize events
                 let pageSize = nbRows * nbColumns + nbColumns;
                 let mediaLayout = $(".mediaLayout").first();
+                let mediaDefaultOuterHeight = 240; // hauteur d'un item au zoom 100%
 
                 if (mediaLayout != null) {
-                    let nbRows = Math.round($("#mainContentPanel").innerHeight() / mediaLayout.outerHeight());
+                    if (mediaLayout.outerHeight() != undefined) {
+                        mediaDefaultOuterHeight = mediaLayout.outerHeight();
+                    }
+                    let nbRows = Math.round($("#mainContentPanel").innerHeight() / mediaDefaultOuterHeight);
                     pageSize = nbRows * nbColumns + nbColumns /* make sure to always have a content overflow */;
                 }
-                console.log("pageSize ", pageSize)
-                if (pageSize != NaN)
-                    $.ajax({ url: `/Medias/SetFirstPageSize?pageSize=${pageSize}` });
+                $.ajax({ url: `/Medias/SetFirstPageSize?pageSize=${pageSize}` });
             }
+
+            function showPageNumber() {
+                let scrollPanel = $("#mainContentPanel");
+                let pageNumber = Math.round(scrollPanel.scrollTop() / scrollPanel.outerHeight()) + 1;
+                $("#pageNumber").html("page - " + pageNumber);
+            }
+
             // Load on demand handling (infinite scroll)
             $("#mainContentPanel").scroll(function () {
                 let scrollPanel = $(this);
@@ -80,6 +89,7 @@
                         })
                     }
                 }
+                showPageNumber();
             })
             $("#searchInput").on('keyup', function () {
                 clearTimeout(keywordsOnchangeTimer);
