@@ -19,6 +19,19 @@ namespace Models
             return Categories;
         }
 
+        public List<string> MediasUsers()
+        {
+            List<string> Users = new List<string>();
+            foreach (Media media in ToList().OrderBy(m => m.Owner.Name))
+            {
+                if (Users.IndexOf(media.Owner.Name) == -1)
+                {
+                    Users.Add(media.Owner.Name);
+                }
+            }
+            return Users;
+        }
+
         public List<Media> GetUserMedias(int userId)
         {
             return ToList().Where(m => m.OwnerId == userId).ToList();
@@ -36,6 +49,7 @@ namespace Models
         {
             DB.Likes.DeleteMediaLikes(id);
             return base.Delete(id);
+
         }
     }
 }
