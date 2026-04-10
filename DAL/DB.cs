@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Hosting;
+using WebApplication.Models;
 
 namespace DAL
 {
@@ -14,11 +15,12 @@ namespace DAL
         private static readonly DB instance = new DB();
         public static DB Instance { get { return instance; } }
         #endregion
-
+        
         public static MediasRepository Medias { get; set; } = new MediasRepository();
         
         static public UsersRepository Users { get; set; }
             = new UsersRepository();
+        public static LikesRepository Likes { get; set; } = new LikesRepository();
 
         static public NotificationsRepository Notifications { get; set; }
             = new NotificationsRepository();
