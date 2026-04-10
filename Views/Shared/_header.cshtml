@@ -10,10 +10,8 @@
 
 
     string selectedCategory = Session["CurrentSelectedCategory"] != null ? (string)Session["CurrentSelectedCategory"] : "";
-    string selectedUser = Session["CurrentSelectedUser"] != null ? (string)Session["CurrentSelectedUser"] : "";
 
     var Categories = (List<string>)Session["Categories"];
-    var Users = (List<string>)Session["Users"];
 
     /* Sort setup */
     var mediaSortBy = Session["MediaSortBy"] != null ? (Models.MediaSortBy)Session["MediaSortBy"] : MediaSortBy.PublishDate;
@@ -233,7 +231,7 @@
         </div>
         <div id="categorySelectPanel" class="flexItem">
             <!-- Dynamically refreshed -->
-            @{ Html.RenderPartial("GetMediasUsersList"); }
+            @{ Html.RenderPartial("GetMediasUsagersList"); }
         </div>
     </div>
 }
